@@ -8,12 +8,12 @@ title:
     name-index: 1
 
 chapter:
-    begin: <!--列表内容开始-->
-    end: <!--列表内容结束-->
+    begin: <dd><table
+    end: </table></dd>
     regexp: <a href="([^>]+)">([^<]+)</a>
     link-index: 1
     name-index: 2
 
 content:
-    begin: <div id="BookText">
-    end: </div>
+    begin: <dd id="contents">
+    end: </dd>
