@@ -34,6 +34,7 @@ func substrBetween(str string, begin string, end string) string {
 
 func htmlAsText(html string) string {
 	text := html
+	text = strings.Replace(text, "</p>", "", -1)
 	text = RE_HTML_COMMENT.ReplaceAllString(text, "")
 	text = RE_HTML_BR.ReplaceAllString(text, "\r\n")
 	text = RE_HTML_P.ReplaceAllString(text, "\r\n\r\n")
