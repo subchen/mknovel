@@ -1,0 +1,30 @@
+{
+    "memo": "d6b1e366f9da868d2d7665fc097370022000b30cd8499b5fb999e724ce1de8cf",
+    "projects": [
+        {
+            "name": "github.com/go-yaml/yaml",
+            "branch": "v2",
+            "revision": "a3f3340b5840cee44f372bddb5880fcbc419b46a",
+            "packages": [
+                "."
+            ]
+        },
+        {
+            "name": "github.com/subchen/gstack",
+            "branch": "master",
+            "revision": "78bb902d6cd6ada1170562aaab9381058952a67f",
+            "packages": [
+                "cli"
+            ]
+        },
+        {
+            "name": "golang.org/x/text",
+            "branch": "master",
+            "revision": "85c29909967d7f171f821e7a42e7b7af76fb9598",
+            "packages": [
+                "encoding",
+                "encoding/simplifiedchinese"
+            ]
+        }
+    ]
+}
