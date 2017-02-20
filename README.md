@@ -21,9 +21,9 @@ Options:
 
 Release: `1.0.0`
 
-* Linux-amd64: https://github.com/subchen/mknovel/bin/mknovel-linux-1.0.0
-* MacOS-amd64: https://github.com/subchen/mknovel/bin/mknovel-darwin-1.0.0
-* Window-amd64: https://github.com/subchen/mknovel/bin/mknovel-1.0.0.exe
+* Linux-amd64: https://raw.githubusercontent.com/subchen/mknovel/master/bin/mknovel-linux-1.0.0
+* MacOS-amd64: https://raw.githubusercontent.com/subchen/mknovel/master/bin/mknovel-darwin-1.0.0
+* Window-amd64: https://raw.githubusercontent.com/subchen/mknovel/master/bin/mknovel-1.0.0.exe
 
 # Usage
 
