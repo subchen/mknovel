@@ -25,9 +25,18 @@ Release: `1.0.0`
 * MacOS-amd64: https://raw.githubusercontent.com/subchen/mknovel/master/bin/mknovel-darwin-1.0.0
 * Window-amd64: https://raw.githubusercontent.com/subchen/mknovel/master/bin/mknovel-1.0.0.exe
 
+# Build from Source
+
+```bash
+go get -u github.com/golang/dep/...
+
+dep ensure -update
+./build
+```
+
 # Usage
 
-## Create a config for target website
+1. Create a config for target website
 
 filename: `www.86696.cc.yaml`
 
@@ -53,7 +62,7 @@ content:
     end: </div>
 ```
 
-## Build novel zip
+2. Build novel zip
 
 ```bash
 mknovel http://www.86696.cc/html/0/846/index.html -d "."
