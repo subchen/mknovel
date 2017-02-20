@@ -158,6 +158,10 @@ func downloadNovel(bookUrl *url.URL, dir string) {
 	chapterList := getNovelChapterList(html, config.Chapter)
 	fmt.Printf("Novel Chapter Count: %v\n", len(chapterList))
 
+	if len(chapterList) < 3 {
+		panic("Unable to parse chapter list")
+	}
+
 	// download chapters
 	fmt.Println()
 	for _, chapter := range chapterList {
