@@ -167,7 +167,7 @@ func downloadNovel(bookUrl *url.URL, dir string) {
 			panic(err)
 		}
 
-		fmt.Printf("Downloading %v ...\n", chapterUrl.String())
+		fmt.Printf("Downloading %d/%d %v ...\n", chapter.Index, len(chapterList), chapterUrl.String())
 
 		// make file name
 		file := filepath.Join(tempdir, fmt.Sprintf("%04d %v.txt", chapter.Index, chapter.Name))
