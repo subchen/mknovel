@@ -17,3 +17,4 @@ chapter:
 content:
     begin: <dd id="contents">
     end: </dd>
+    ignore-short-text: 2000

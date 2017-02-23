@@ -8,9 +8,9 @@ title:
     name-index: 1
 
 chapter:
-    begin: <!--列表内容开始-->
-    end: <!--列表内容结束-->
-    regexp: <a href="([^>]+)">([^<]+)</a>
+    begin: <div id="list">
+    end: </div>
+    regexp: <a href="([^>]+)" title="([^>]+)">
     link-index: 1
     name-index: 2
 

@@ -41,8 +41,9 @@ type (
 		LinkIndex int    `yaml:"link-index"`
 	}
 	NovelContentConfig struct {
-		Begin string `yaml:"begin"`
-		End   string `yaml:"end"`
+		Begin           string `yaml:"begin"`
+		End             string `yaml:"end"`
+		IgnoreShortText int    `yaml:"ignore-short-text"`
 	}
 )
 
@@ -184,6 +185,11 @@ func downloadNovel(bookUrl *url.URL, dir string) {
 
 		// html to text
 		html = getNovelChapterContent(html, config.Content)
+		if len(html) < config.Content.IgnoreShortText {
+			fmt.Printf("Ignored %s\n", chapter.Name)
+			continue
+		}
+
 		text := "    " + chapter.Name + "\n\n" + htmlAsText(html)
 
 		// write file
