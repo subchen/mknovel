@@ -24,10 +24,17 @@ type (
 		WebsiteCharset     string              `yaml:"website-charset"`
 		ZipFilenameCharset string              `yaml:"zipfilename-charset"`
 		Title              *NovelTitleConfig   `yaml:"title"`
+		Author             *NovelAuthorConfig  `yaml:"author"`
 		Chapter            *NovelChapterConfig `yaml:"chapter`
 		Content            *NovelContentConfig `yaml:"content"`
 	}
 	NovelTitleConfig struct {
+		Begin     string `yaml:"begin"`
+		End       string `yaml:"end"`
+		Regexp    string `yaml:"regexp"`
+		NameIndex int    `yaml:"name-index"`
+	}
+	NovelAuthorConfig struct {
 		Begin     string `yaml:"begin"`
 		End       string `yaml:"end"`
 		Regexp    string `yaml:"regexp"`
@@ -91,6 +98,17 @@ func getNovelTitle(html string, config *NovelTitleConfig) string {
 	return strings.TrimSpace(title)
 }
 
+func getNovelAuthor(html string, config *NovelAuthorConfig) string {
+	if config.Begin != "" && config.End != "" {
+		html = substrBetween(html, config.Begin, config.End)
+	}
+
+	re := regexp.MustCompile(config.Regexp)
+	matches := re.FindStringSubmatch(html)
+	title := matches[config.NameIndex]
+	return strings.TrimSpace(title)
+}
+
 func getNovelChapterList(html string, config *NovelChapterConfig) []NovelChapter {
 	if config.Begin != "" && config.End != "" {
 		html = substrBetween(html, config.Begin, config.End)
@@ -137,6 +155,14 @@ func downloadURL(url string, charset string) string {
 }
 
 func downloadNovel(bookUrl *url.URL, dir string) {
+	defer func() {
+		if err := recover(); err != nil {
+			fmt.Println()
+			fmt.Printf("ERROR: %+v\n", err)
+			os.Exit(1)
+		}
+	}()
+
 	tempdir := filepath.Join(dir, hashCRC(bookUrl.String()))
 	os.MkdirAll(tempdir, 0755)
 
@@ -155,6 +181,8 @@ func downloadNovel(bookUrl *url.URL, dir string) {
 
 	title := getNovelTitle(html, config.Title)
 	fmt.Printf("Novel Name: %v\n", title)
+	author := getNovelAuthor(html, config.Author)
+	fmt.Printf("Novel Author: %v\n", author)
 
 	chapterList := getNovelChapterList(html, config.Chapter)
 	fmt.Printf("Novel Chapter Count: %v\n", len(chapterList))
@@ -200,7 +228,7 @@ func downloadNovel(bookUrl *url.URL, dir string) {
 	}
 
 	// zip novel file
-	file := filepath.Join(dir, title+".zip")
+	file := filepath.Join(dir, fmt.Sprintf("%s (%s).zip", title, author))
 	fmt.Println()
 	fmt.Printf("Archive Zip: %v ...\n", file)
 	zipToFile(file, tempdir, config.ZipFilenameCharset)
