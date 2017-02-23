@@ -6,7 +6,7 @@ DIST=$ROOT/bin
 NAME=mknovel
 VERSION=1.1.0
 
-rm -rf $DIST && mkdir -p $DIST
+mkdir -p $DIST
 
 ldflags="-s -w"
 ldflags="$ldflags -X 'main.BuildVersion=$(git rev-list HEAD --count)'"
