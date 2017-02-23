@@ -205,7 +205,7 @@ func downloadNovelChapter(novel *Novel, chapter NovelChapter, nIndex *int32) thr
 	}
 }
 
-func downloadNovel(bookUrl *url.URL, dir string) {
+func downloadNovel(bookUrl *url.URL, dir string, nThreads int) {
 	defer func() {
 		if err := recover(); err != nil {
 			fmt.Println()
@@ -245,7 +245,7 @@ func downloadNovel(bookUrl *url.URL, dir string) {
 		panic("Unable to parse chapter list")
 	}
 
-	pool := threads.NewPool(100, 200)
+	pool := threads.NewPool(nThreads, nThreads*2)
 	pool.Start()
 
 	// download chapters
