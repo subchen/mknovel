@@ -6,12 +6,13 @@
 A general tool for download novel from website.
 
 ```
-Usage: mknovel [-d dir] URL
+Usage: mknovel [--threads=100] [-d dir] URL
    or: mknovel [ --version | --help ]
 
 Download a novel from URL, transform HTML to TEXT, zipped it.
 
 Options:
+  --threads=100       parallel threads
   -d, --directory=.   download novel into directory
   --version           show version information
   --help              show this help
@@ -19,11 +20,11 @@ Options:
 
 # Downloads
 
-Release: `1.0.0`
+Release: `1.1.0`
 
-* Linux-amd64: https://raw.githubusercontent.com/subchen/mknovel/master/bin/mknovel-linux-1.0.0
-* MacOS-amd64: https://raw.githubusercontent.com/subchen/mknovel/master/bin/mknovel-darwin-1.0.0
-* Window-amd64: https://raw.githubusercontent.com/subchen/mknovel/master/bin/mknovel-1.0.0.exe
+* Linux-amd64: https://raw.githubusercontent.com/subchen/mknovel/master/bin/mknovel-linux-1.1.0
+* MacOS-amd64: https://raw.githubusercontent.com/subchen/mknovel/master/bin/mknovel-darwin-1.1.0
+* Window-amd64: https://raw.githubusercontent.com/subchen/mknovel/master/bin/mknovel-1.1.0.exe
 
 # Build from Source
 
@@ -50,16 +51,23 @@ title:
     regexp: (.+)最新章节
     name-index: 1
 
+author:
+    begin: <div id="info">作者：<a
+    end: </a>
+    regexp: href=".+" target="_blank">(.+)
+    name-index: 1
+
 chapter:
     begin: <!--列表内容开始-->
     end: <!--列表内容结束-->
-    regexp: <a href="(.+)">(.+)</a>
+    regexp: <a href="([^>]+)">([^<]+)</a>
     link-index: 1
     name-index: 2
 
 content:
     begin: <div id="BookText">
     end: </div>
+    ignore-short-text: 2000
 ```
 
 2. Build novel zip
