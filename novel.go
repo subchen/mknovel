@@ -9,11 +9,21 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+	"sync/atomic"
 
 	"github.com/go-yaml/yaml"
+	"github.com/wushilin/threads"
 )
 
 type (
+	Novel struct {
+		Name        string
+		Author      string
+		BookUrl     *url.URL
+		ChapterList []NovelChapter
+		Config      *NovelConfig
+		Tempdir     string
+	}
 	NovelChapter struct {
 		Index int
 		Name  string
@@ -154,68 +164,33 @@ func downloadURL(url string, charset string) string {
 	}
 }
 
-func downloadNovel(bookUrl *url.URL, dir string) {
-	defer func() {
-		if err := recover(); err != nil {
-			fmt.Println()
-			fmt.Printf("ERROR: %+v\n", err)
-			os.Exit(1)
-		}
-	}()
-
-	tempdir := filepath.Join(dir, hashCRC(bookUrl.String()))
-	os.MkdirAll(tempdir, 0755)
-
-	fmt.Printf("Novel URL: %s\n", bookUrl)
-	fmt.Printf("Output directory: %s\n", tempdir)
-
-	// load config
-	configFile := findConfigFile(bookUrl.Host + ".yaml")
-	fmt.Printf("Config File: %s\n", configFile)
-	config := loadConfigFile(configFile)
-
-	// download indexes
-	fmt.Println()
-	fmt.Printf("Downloading %s ...\n", bookUrl)
-	html := downloadURL(bookUrl.String(), config.WebsiteCharset)
-
-	title := getNovelTitle(html, config.Title)
-	fmt.Printf("Novel Name: %v\n", title)
-	author := getNovelAuthor(html, config.Author)
-	fmt.Printf("Novel Author: %v\n", author)
-
-	chapterList := getNovelChapterList(html, config.Chapter)
-	fmt.Printf("Novel Chapter Count: %v\n", len(chapterList))
-
-	if len(chapterList) < 3 {
-		panic("Unable to parse chapter list")
-	}
-
-	// download chapters
-	fmt.Println()
-	for _, chapter := range chapterList {
+func downloadNovelChapter(novel *Novel, chapter NovelChapter, nIndex *int32) threads.JobFunc {
+	return func() interface{} {
 		// make chapter url
-		chapterUrl, err := bookUrl.Parse(chapter.Link)
+		chapterUrl, err := novel.BookUrl.Parse(chapter.Link)
 		if err != nil {
 			panic(err)
 		}
 
-		fmt.Printf("Downloading %d/%d %v ...\n", chapter.Index, len(chapterList), chapterUrl.String())
+		atomic.AddInt32(nIndex, 1)
+		fmt.Printf("Downloading %d/%d %04d %v ...\n", *nIndex, len(novel.ChapterList), chapter.Index, chapterUrl.String())
 
 		// make file name
-		file := filepath.Join(tempdir, fmt.Sprintf("%04d %v.txt", chapter.Index, chapter.Name))
+		file := filepath.Join(novel.Tempdir, fmt.Sprintf("%04d %v.txt", chapter.Index, chapter.Name))
 		if fileExist(file) {
-			continue
+			//continue
+			return nil
 		}
 
 		// download
-		html := downloadURL(chapterUrl.String(), config.WebsiteCharset)
+		html := downloadURL(chapterUrl.String(), novel.Config.WebsiteCharset)
 
 		// html to text
-		html = getNovelChapterContent(html, config.Content)
-		if len(html) < config.Content.IgnoreShortText {
-			fmt.Printf("Ignored %s\n", chapter.Name)
-			continue
+		html = getNovelChapterContent(html, novel.Config.Content)
+		if len(html) < novel.Config.Content.IgnoreShortText {
+			fmt.Printf("Ignored short chapter %04d %s\n", chapter.Index, chapter.Name)
+			//continue
+			return nil
 		}
 
 		text := "    " + chapter.Name + "\n\n" + htmlAsText(html)
@@ -225,13 +200,69 @@ func downloadNovel(bookUrl *url.URL, dir string) {
 		if err != nil {
 			panic(err)
 		}
+
+		return nil
+	}
+}
+
+func downloadNovel(bookUrl *url.URL, dir string) {
+	defer func() {
+		if err := recover(); err != nil {
+			fmt.Println()
+			fmt.Printf("ERROR: %+v\n", err)
+			os.Exit(1)
+		}
+	}()
+
+	novel := &Novel{}
+	novel.BookUrl = bookUrl
+
+	novel.Tempdir = filepath.Join(dir, hashCRC(bookUrl.String()))
+	os.MkdirAll(novel.Tempdir, 0755)
+
+	fmt.Printf("Novel URL: %s\n", novel.BookUrl)
+	fmt.Printf("Output directory: %s\n", novel.Tempdir)
+
+	// load config
+	configFile := findConfigFile(bookUrl.Host + ".yaml")
+	fmt.Printf("Config File: %s\n", configFile)
+	novel.Config = loadConfigFile(configFile)
+
+	// download indexes
+	fmt.Println()
+	fmt.Printf("Downloading %s ...\n", novel.BookUrl)
+	html := downloadURL(bookUrl.String(), novel.Config.WebsiteCharset)
+
+	novel.Name = getNovelTitle(html, novel.Config.Title)
+	fmt.Printf("Novel Name: %v\n", novel.Name)
+	novel.Author = getNovelAuthor(html, novel.Config.Author)
+	fmt.Printf("Novel Author: %v\n", novel.Author)
+
+	novel.ChapterList = getNovelChapterList(html, novel.Config.Chapter)
+	fmt.Printf("Novel Chapter Count: %v\n", len(novel.ChapterList))
+
+	if len(novel.ChapterList) < 3 {
+		panic("Unable to parse chapter list")
 	}
 
+	pool := threads.NewPool(100, 200)
+	pool.Start()
+
+	// download chapters
+	nIndex := int32(0)
+	fmt.Println()
+	for _, chapter := range novel.ChapterList {
+		pool.Submit(downloadNovelChapter(novel, chapter, &nIndex))
+	}
+
+	pool.Shutdown()
+	pool.Wait()
+
 	// zip novel file
-	file := filepath.Join(dir, fmt.Sprintf("%s (%s).zip", title, author))
+	file := filepath.Join(dir, fmt.Sprintf("%s (%s).zip", novel.Name, novel.Author))
 	fmt.Println()
 	fmt.Printf("Archive Zip: %v ...\n", file)
-	zipToFile(file, tempdir, config.ZipFilenameCharset)
+	zipToFile(file, novel.Tempdir, novel.Config.ZipFilenameCharset)
 
 	// done
 	fmt.Println()

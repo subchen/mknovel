@@ -1,5 +1,5 @@
 {
-    "memo": "d6b1e366f9da868d2d7665fc097370022000b30cd8499b5fb999e724ce1de8cf",
+    "memo": "330468aabba0db0fa7fe6154a5dc0e89dfdb95392316407c17b7fee707e7cd74",
     "projects": [
         {
             "name": "github.com/go-yaml/yaml",
@@ -18,9 +18,17 @@
             ]
         },
         {
+            "name": "github.com/wushilin/threads",
+            "branch": "master",
+            "revision": "d24acb41d4569064630b4157284eec6313aed34a",
+            "packages": [
+                "."
+            ]
+        },
+        {
             "name": "golang.org/x/text",
             "branch": "master",
-            "revision": "85c29909967d7f171f821e7a42e7b7af76fb9598",
+            "revision": "4687d739464a2d0af89a25be0318456e0776f3ef",
             "packages": [
                 "encoding",
                 "encoding/simplifiedchinese"
