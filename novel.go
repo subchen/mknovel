@@ -58,9 +58,8 @@ type (
 		LinkIndex int    `yaml:"link-index"`
 	}
 	NovelContentConfig struct {
-		Begin           string `yaml:"begin"`
-		End             string `yaml:"end"`
-		IgnoreShortText int    `yaml:"ignore-short-text"`
+		Begin string `yaml:"begin"`
+		End   string `yaml:"end"`
 	}
 )
 
@@ -71,6 +70,11 @@ func findConfigFile(file string) string {
 	}
 
 	configFile = filepath.Join(getExecutorDirectory(), file)
+	if fileExist(configFile) {
+		return configFile
+	}
+
+	configFile = filepath.Join(getExecutorDirectory(), "config", file)
 	if fileExist(configFile) {
 		return configFile
 	}
@@ -164,7 +168,7 @@ func downloadURL(url string, charset string) string {
 	}
 }
 
-func downloadNovelChapter(novel *Novel, chapter NovelChapter, nIndex *int32) threads.JobFunc {
+func downloadNovelChapter(novel *Novel, chapter NovelChapter, nIndex *int32, nShortChapter int) threads.JobFunc {
 	return func() interface{} {
 		// make chapter url
 		chapterUrl, err := novel.BookUrl.Parse(chapter.Link)
@@ -187,7 +191,7 @@ func downloadNovelChapter(novel *Novel, chapter NovelChapter, nIndex *int32) thr
 
 		// html to text
 		html = getNovelChapterContent(html, novel.Config.Content)
-		if len(html) < novel.Config.Content.IgnoreShortText {
+		if len(html) < nShortChapter {
 			fmt.Printf("Ignored short chapter %04d %s\n", chapter.Index, chapter.Name)
 			//continue
 			return nil
@@ -205,11 +209,14 @@ func downloadNovelChapter(novel *Novel, chapter NovelChapter, nIndex *int32) thr
 	}
 }
 
-func downloadNovel(bookUrl *url.URL, dir string, nThreads int) {
+func downloadNovel(bookUrl *url.URL, dir string, nThreads int, nShortChapter int) {
 	defer func() {
 		if err := recover(); err != nil {
 			fmt.Println()
 			fmt.Printf("ERROR: %+v\n", err)
+			fmt.Println()
+			fmt.Println("You can retry when network issue.")
+			fmt.Println()
 			os.Exit(1)
 		}
 	}()
@@ -252,7 +259,7 @@ func downloadNovel(bookUrl *url.URL, dir string, nThreads int) {
 	nIndex := int32(0)
 	fmt.Println()
 	for _, chapter := range novel.ChapterList {
-		pool.Submit(downloadNovelChapter(novel, chapter, &nIndex))
+		pool.Submit(downloadNovelChapter(novel, chapter, &nIndex, nShortChapter))
 	}
 
 	pool.Shutdown()

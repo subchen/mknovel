@@ -4,7 +4,7 @@ set -e
 ROOT=$(cd $(dirname $0); pwd)
 DIST=$ROOT/bin
 NAME=mknovel
-VERSION=1.1.0
+VERSION=$(cat VERSION.txt)
 
 mkdir -p $DIST
 
@@ -12,6 +12,7 @@ ldflags="-s -w"
 ldflags="$ldflags -X 'main.BuildVersion=$(git rev-list HEAD --count)'"
 ldflags="$ldflags -X 'main.BuildGitCommit=$(git describe --abbrev=0 --always)'"
 ldflags="$ldflags -X 'main.BuildDate=$(date -u -R)'"
+ldflags="$ldflags -X 'main.VERSION=$VERSION'"
 
 # build and zip
 echo "building for linux"
