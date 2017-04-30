@@ -21,19 +21,20 @@ Options:
 
 # Downloads
 
-Release: `1.2.0`
+Release: `1.2.1`
 
-* Linux-amd64: https://raw.githubusercontent.com/subchen/mknovel/master/bin/mknovel-linux-1.2.0
-* MacOS-amd64: https://raw.githubusercontent.com/subchen/mknovel/master/bin/mknovel-darwin-1.2.0
-* Window-amd64: https://raw.githubusercontent.com/subchen/mknovel/master/bin/mknovel-1.2.0.exe
+* Linux-amd64: https://raw.githubusercontent.com/subchen/mknovel/master/bin/mknovel-linux-1.2.1
+* MacOS-amd64: https://raw.githubusercontent.com/subchen/mknovel/master/bin/mknovel-darwin-1.2.1
+* Window-amd64: https://raw.githubusercontent.com/subchen/mknovel/master/bin/mknovel-1.2.1.exe
 
 # Build from Source
 
 ```bash
-go get -u github.com/golang/dep/...
+# install glide
+curl https://glide.sh/get | sh
 
-dep ensure -update
-./build
+glide install
+make build
 ```
 
 # Usage

@@ -1,0 +1,12 @@
+package: github.com/subchen/mknovel
+import:
+- package: github.com/go-yaml/yaml
+  branch: v2
+- package: github.com/subchen/gstack
+  subpackages:
+  - cli
+- package: github.com/wushilin/threads
+- package: golang.org/x/text
+  subpackages:
+  - encoding
+  - encoding/simplifiedchinese

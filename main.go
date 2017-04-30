@@ -10,8 +10,8 @@ import (
 )
 
 var (
-	VERSION        string
 	BuildVersion   string
+	BuildGitRev    string
 	BuildGitCommit string
 	BuildDate      string
 )
@@ -22,15 +22,15 @@ func main() {
 	app.Flag("--short-chapter", "ignore short chapter").Default("3000")
 	app.Flag("-d, --directory", "output directory").Default(".")
 
-	if VERSION == "" {
+	if BuildVersion == "" {
 		app.Version = "0.0.1-alpha"
 	} else {
 		app.Version = func() {
-			fmt.Printf("Version: %s-%s\n", VERSION, BuildVersion)
+			fmt.Printf("Version:    %s-%s\n", BuildVersion, BuildGitRev)
 			fmt.Printf("Go version: %s\n", runtime.Version())
 			fmt.Printf("Git commit: %s\n", BuildGitCommit)
-			fmt.Printf("Built: %s\n", BuildDate)
-			fmt.Printf("OS/Arch: %s/%s\n", runtime.GOOS, runtime.GOARCH)
+			fmt.Printf("Built:      %s\n", BuildDate)
+			fmt.Printf("OS/Arch:    %s/%s\n", runtime.GOOS, runtime.GOARCH)
 		}
 	}
 
@@ -43,7 +43,7 @@ func main() {
 
 	app.Execute = func(ctx *cli.Context) {
 		nThreads := ctx.Int("--threads")
-		nShortChapter := ctx.Int("--ignore-short-chapter")
+		nShortChapter := ctx.Int("--short-chapter")
 		dir := ctx.String("-d")
 		rawUrl := ctx.Arg(0)
 
