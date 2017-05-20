@@ -22,7 +22,7 @@ func substrBetween(str string, begin string, end string) string {
 		return ""
 	}
 
-	leftStr := str[ipos+len(begin) : len(str)]
+	leftStr := str[ipos+len(begin): len(str)]
 
 	jpos := strings.Index(leftStr, end)
 	if jpos < 0 {
@@ -57,9 +57,24 @@ func getExecutorDirectory() string {
 	return dir
 }
 
+func getCurrentDirectory() string {
+	dir := os.Getenv("PWD")
+	if dir == "" {
+		dir = "."
+	}
+	return dir
+}
+
 func fileExist(file string) bool {
 	if _, err := os.Stat(file); err == nil {
 		return true
 	}
 	return false
+}
+
+func fileSize(file string) int {
+	if f, err := os.Stat(file); err == nil {
+		return int(f.Size())
+	}
+	return 0
 }

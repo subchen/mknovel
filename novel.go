@@ -20,7 +20,7 @@ type (
 		Name        string
 		Author      string
 		BookUrl     *url.URL
-		ChapterList []NovelChapter
+		ChapterList []*NovelChapter
 		Config      *NovelConfig
 		Tempdir     string
 	}
@@ -28,6 +28,7 @@ type (
 		Index int
 		Name  string
 		Link  string
+		Size  int
 	}
 
 	NovelConfig struct {
@@ -79,6 +80,16 @@ func findConfigFile(file string) string {
 		return configFile
 	}
 
+	configFile = filepath.Join(getCurrentDirectory(), file)
+	if fileExist(configFile) {
+		return configFile
+	}
+
+	configFile = filepath.Join(getCurrentDirectory(), "config", file)
+	if fileExist(configFile) {
+		return configFile
+	}
+
 	configFile = filepath.Join("/etc/mknovel", file)
 	if fileExist(configFile) {
 		return configFile
@@ -123,17 +134,17 @@ func getNovelAuthor(html string, config *NovelAuthorConfig) string {
 	return strings.TrimSpace(title)
 }
 
-func getNovelChapterList(html string, config *NovelChapterConfig) []NovelChapter {
+func getNovelChapterList(html string, config *NovelChapterConfig) []*NovelChapter {
 	if config.Begin != "" && config.End != "" {
 		html = substrBetween(html, config.Begin, config.End)
 	}
 
 	re := regexp.MustCompile(config.Regexp)
 	matches := re.FindAllStringSubmatch(html, -1)
-	chapterList := make([]NovelChapter, 0, len(matches))
+	chapterList := make([]*NovelChapter, 0, len(matches))
 
 	for i, match := range matches {
-		chapter := NovelChapter{
+		chapter := &NovelChapter{
 			Index: i + 1,
 			Name:  strings.TrimSpace(match[config.NameIndex]),
 			Link:  match[config.LinkIndex],
@@ -168,7 +179,7 @@ func downloadURL(url string, charset string) string {
 	}
 }
 
-func downloadNovelChapter(novel *Novel, chapter NovelChapter, nIndex *int32, nShortChapter int) threads.JobFunc {
+func downloadNovelChapter(novel *Novel, chapter *NovelChapter, nIndex *int32, nShortChapter int) threads.JobFunc {
 	return func() interface{} {
 		// make chapter url
 		chapterUrl, err := novel.BookUrl.Parse(chapter.Link)
@@ -183,6 +194,7 @@ func downloadNovelChapter(novel *Novel, chapter NovelChapter, nIndex *int32, nSh
 		file := filepath.Join(novel.Tempdir, fmt.Sprintf("%04d %v.txt", chapter.Index, chapter.Name))
 		if fileExist(file) {
 			//continue
+			chapter.Size = fileSize(file)
 			return nil
 		}
 
@@ -191,8 +203,8 @@ func downloadNovelChapter(novel *Novel, chapter NovelChapter, nIndex *int32, nSh
 
 		// html to text
 		html = getNovelChapterContent(html, novel.Config.Content)
+		chapter.Size = len(html)
 		if len(html) < nShortChapter {
-			fmt.Printf("Ignored short chapter %04d %s\n", chapter.Index, chapter.Name)
 			//continue
 			return nil
 		}
@@ -215,7 +227,7 @@ func downloadNovel(bookUrl *url.URL, dir string, nThreads int, nShortChapter int
 			fmt.Println()
 			fmt.Printf("ERROR: %+v\n", err)
 			fmt.Println()
-			fmt.Println("You can retry when network issue.")
+			fmt.Println("You can retry when network issue recovered.")
 			fmt.Println()
 			os.Exit(1)
 		}
@@ -264,6 +276,22 @@ func downloadNovel(bookUrl *url.URL, dir string, nThreads int, nShortChapter int
 
 	pool.Shutdown()
 	pool.Wait()
+
+	// output ignored short chapters
+	ignoredCount := 0
+	for _, chapter := range novel.ChapterList {
+		if chapter.Size < nShortChapter {
+			if ignoredCount == 0 {
+				fmt.Println()
+				fmt.Println("Found Short Chapters ...")
+			}
+			ignoredCount++
+			fmt.Printf("%04d %s (%d)\n", chapter.Index, chapter.Name, chapter.Size)
+		}
+	}
+	if ignoredCount > 0 {
+
+	}
 
 	// zip novel file
 	file := filepath.Join(dir, fmt.Sprintf("%s (%s).zip", novel.Name, novel.Author))
