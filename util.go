@@ -22,7 +22,7 @@ func substrBetween(str string, begin string, end string) string {
 		return ""
 	}
 
-	leftStr := str[ipos+len(begin): len(str)]
+	leftStr := str[ipos+len(begin) : len(str)]
 
 	jpos := strings.Index(leftStr, end)
 	if jpos < 0 {
