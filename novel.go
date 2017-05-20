@@ -289,9 +289,6 @@ func downloadNovel(bookUrl *url.URL, dir string, nThreads int, nShortChapter int
 			fmt.Printf("%04d %s (%d)\n", chapter.Index, chapter.Name, chapter.Size)
 		}
 	}
-	if ignoredCount > 0 {
-
-	}
 
 	// zip novel file
 	file := filepath.Join(dir, fmt.Sprintf("%s (%s).zip", novel.Name, novel.Author))
