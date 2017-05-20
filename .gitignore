@@ -1,5 +1,4 @@
-/vendor/
+/.glide/
 /*.zip
-
 !/bin/*.exe
 /mknovel

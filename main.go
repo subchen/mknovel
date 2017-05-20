@@ -3,10 +3,10 @@ package main
 import (
 	"fmt"
 	"net/url"
+	"os"
 	"path/filepath"
-	"runtime"
 
-	"github.com/subchen/gstack/cli"
+	"github.com/subchen/go-cli"
 )
 
 var (
@@ -16,45 +16,64 @@ var (
 	BuildDate      string
 )
 
+var (
+	nThreads      int
+	nShortChapter int
+	directory     string
+)
+
 func main() {
-	app := cli.NewApp("mknovel", "Download a novel from URL, transform HTML to TEXT, zipped it.")
-	app.Flag("--threads", "parallel threads").Default("100")
-	app.Flag("--short-chapter", "ignore short chapter").Default("3000")
-	app.Flag("-d, --directory", "output directory").Default(".")
+	app := cli.NewApp()
+	app.Name = "mknovel"
+	app.Usage = "Download a novel from URL, transform HTML to TEXT, pack it"
+	app.UsageText = "[options] URL"
+	app.Authors = "Guoqiang Chen <subchen@gmail.com>"
 
-	if BuildVersion == "" {
-		app.Version = "0.0.1-alpha"
-	} else {
-		app.Version = func() {
-			fmt.Printf("Version:    %s-%s\n", BuildVersion, BuildGitRev)
-			fmt.Printf("Go version: %s\n", runtime.Version())
-			fmt.Printf("Git commit: %s\n", BuildGitCommit)
-			fmt.Printf("Built:      %s\n", BuildDate)
-			fmt.Printf("OS/Arch:    %s/%s\n", runtime.GOOS, runtime.GOARCH)
+	app.Flags = []*cli.Flag{
+		{
+			Name:        "threads",
+			Usage:       "parallel threads",
+			PlaceHolder: "num",
+			DefValue:    "100",
+			Value:       &nThreads,
+		},
+		{
+			Name:        "short-chapter",
+			Usage:       "ignore chapter if size is short",
+			PlaceHolder: "size",
+			DefValue:    "3000",
+			Value:       &nShortChapter,
+		}, {
+			Name:        "d, directory",
+			Usage:       "output directory",
+			PlaceHolder: "dir",
+			DefValue:    ".",
+			Value:       &directory,
+		},
+	}
+
+	if BuildVersion != "" {
+		app.Version = BuildVersion + "-" + BuildGitRev
+		app.BuildGitCommit = BuildGitCommit
+		app.BuildDate = BuildDate
+	}
+
+	app.Action = func(c *cli.Context) {
+		if c.NArg() == 0 {
+			c.ShowHelp()
+			return
 		}
-	}
 
-	app.Usage = func() {
-		fmt.Println("Usage: mknovel [--threads=100] [--short-chapter=3000] [-d dir] URL")
-		fmt.Println("   or: mknovel [ --version | --help ]")
-	}
-
-	app.AllowArgumentCount(1, 1)
-
-	app.Execute = func(ctx *cli.Context) {
-		nThreads := ctx.Int("--threads")
-		nShortChapter := ctx.Int("--short-chapter")
-		dir := ctx.String("-d")
-		rawUrl := ctx.Arg(0)
+		rawUrl := c.Args()[0]
 
 		bookUrl, err := url.Parse(rawUrl)
 		if err != nil || bookUrl.Host == "" {
-			cli.Fatalf("The book url is invalid: %s", bookUrl)
+			c.ShowError(fmt.Errorf("The book url is invalid: %s", bookUrl))
 		}
 
-		dir, _ = filepath.Abs(dir)
-		downloadNovel(bookUrl, dir, nThreads, nShortChapter)
+		directory, _ = filepath.Abs(directory)
+		downloadNovel(bookUrl, directory, nThreads, nShortChapter)
 	}
 
-	app.Run()
+	app.Run(os.Args)
 }

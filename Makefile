@@ -15,6 +15,9 @@ PACKAGES := $(shell go list ./... | grep -v /vendor/)
 clean:
 	@ rm -rf $(NAME)
 
+glide-vc:
+	@ glide-vc --only-code --no-tests --no-legal-files
+
 fmt:
 	@ go fmt $(PACKAGES)
 
@@ -44,9 +47,3 @@ build-darwin: clean
 build-windows: clean
 	@ GOOS=windows GOARCH=amd64 \
 	go build -ldflags "$(LDFLAGS)" -o bin/$(NAME)-windows-$(VERSION).exe
-
-install-deps:
-	@ glide install
-
-update-deps:
-	@ glide update

@@ -35,7 +35,7 @@ type (
 		ZipFilenameCharset string              `yaml:"zipfilename-charset"`
 		Title              *NovelTitleConfig   `yaml:"title"`
 		Author             *NovelAuthorConfig  `yaml:"author"`
-		Chapter            *NovelChapterConfig `yaml:"chapter`
+		Chapter            *NovelChapterConfig `yaml:"chapter"`
 		Content            *NovelContentConfig `yaml:"content"`
 	}
 	NovelTitleConfig struct {
