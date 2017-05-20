@@ -6,38 +6,35 @@
 A general tool for download novel from website.
 
 ```
-Usage: mknovel [--threads=100] [--short-chapter=3000] [-d dir] URL
-   or: mknovel [ --version | --help ]
+NAME:
+   mknovel - Download a novel from URL, transform HTML to TEXT, pack it
 
-Download a novel from URL, transform HTML to TEXT, zipped it.
+USAGE:
+   mknovel [options] URL
 
-Options:
-  --threads=100          parallel threads
-  --short-chapter=3000   ignore short chapter
-  -d, --directory=.      output directory
-  --version              show version information
-  --help                 show this help
+VERSION:
+   1.2.2-29
+
+AUTHORS:
+   Guoqiang Chen <subchen@gmail.com>
+
+OPTIONS:
+   --threads num             parallel threads (default: 100)
+   --short-chapter size      ignore chapter if size is short (default: 3000)
+   -d dir, --directory dir   output directory (default: .)
+   --help                    print this usage
+   --version                 print version information
 ```
 
-# Downloads
+## Downloads
 
-Release: `1.2.1`
+Release: `1.2.2`
 
-* Linux-amd64: https://raw.githubusercontent.com/subchen/mknovel/master/bin/mknovel-linux-1.2.1
-* MacOS-amd64: https://raw.githubusercontent.com/subchen/mknovel/master/bin/mknovel-darwin-1.2.1
-* Window-amd64: https://raw.githubusercontent.com/subchen/mknovel/master/bin/mknovel-windows-1.2.1.exe
+* Linux-amd64: https://raw.githubusercontent.com/subchen/mknovel/master/bin/mknovel-linux-1.2.2
+* MacOS-amd64: https://raw.githubusercontent.com/subchen/mknovel/master/bin/mknovel-darwin-1.2.2
+* Window-amd64: https://raw.githubusercontent.com/subchen/mknovel/master/bin/mknovel-windows-1.2.2.exe
 
-# Build from Source
-
-```bash
-# install glide
-curl https://glide.sh/get | sh
-
-glide install
-make build
-```
-
-# Usage
+## Usage
 
 1. Create a config for target website
 
@@ -74,5 +71,5 @@ content:
 2. Build novel zip
 
 ```bash
-mknovel http://www.86696.cc/html/0/846/index.html -d "."
+mknovel http://www.86696.cc/html/0/846/index.html
 ```
