@@ -33,20 +33,20 @@ func main() {
 		{
 			Name:        "threads",
 			Usage:       "parallel threads",
-			PlaceHolder: "num",
+			Placeholder: "num",
 			DefValue:    "100",
 			Value:       &nThreads,
 		},
 		{
 			Name:        "short-chapter",
 			Usage:       "ignore chapter if size is short",
-			PlaceHolder: "size",
+			Placeholder: "size",
 			DefValue:    "3000",
 			Value:       &nShortChapter,
 		}, {
 			Name:        "d, directory",
 			Usage:       "output directory",
-			PlaceHolder: "dir",
+			Placeholder: "dir",
 			DefValue:    ".",
 			Value:       &directory,
 		},
