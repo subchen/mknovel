@@ -31,9 +31,12 @@ type App struct {
 	// List of commands to execute
 	Commands []*Command
 
-	// hidden --help and --version from usage
+	// Hidden --help and --version from usage
 	HiddenHelp    bool
 	HiddenVersion bool
+
+	// Align long flags in usage help
+	FlagsAlign bool
 
 	// Display full help
 	ShowHelp func(*HelpContext)
@@ -52,6 +55,7 @@ func NewApp() *App {
 		Name:        filepath.Base(os.Args[0]),
 		Usage:       "A new cli application",
 		Version:     "0.0.0",
+		FlagsAlign:  true,
 		ShowHelp:    showHelp,
 		ShowVersion: showVersion,
 	}
@@ -83,11 +87,11 @@ func (a *App) Run(arguments []string) {
 	a.initialize()
 
 	// parse cli arguments
-	cli := &commandline{
+	cl := &commandline{
 		flags:    a.Flags,
 		commands: a.Commands,
 	}
-	err := cli.parse(arguments[1:])
+	err := cl.parse(arguments[1:])
 
 	// build context
 	newCtx := &Context{
@@ -95,7 +99,7 @@ func (a *App) Run(arguments []string) {
 		app:      a,
 		flags:    a.Flags,
 		commands: a.Commands,
-		args:     cli.args,
+		args:     cl.args,
 	}
 
 	if err != nil {
@@ -114,8 +118,8 @@ func (a *App) Run(arguments []string) {
 	}
 
 	// command not found
-	if cli.commands == nil && len(a.Commands) > 0 && len(cli.args) > 0 {
-		cmd := cli.args[0]
+	if cl.command == nil && len(a.Commands) > 0 && len(cl.args) > 0 {
+		cmd := cl.args[0]
 		if a.OnCommandNotFound != nil {
 			a.OnCommandNotFound(newCtx, cmd)
 		} else {
@@ -124,8 +128,8 @@ func (a *App) Run(arguments []string) {
 	}
 
 	// run command
-	if cli.command != nil {
-		cli.command.Run(newCtx)
+	if cl.command != nil {
+		cl.command.Run(newCtx)
 		return
 	}
 
