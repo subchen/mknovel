@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/subchen/mknovel.svg?branch=master)](https://travis-ci.org/subchen/mknovel)
 [![License](http://img.shields.io/badge/License-Apache_2-red.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0)
 
 
@@ -13,7 +14,7 @@ USAGE:
    mknovel [options] URL
 
 VERSION:
-   1.2.2-29
+   1.2.3-38
 
 AUTHORS:
    Guoqiang Chen <subchen@gmail.com>
@@ -28,11 +29,27 @@ OPTIONS:
 
 ## Downloads
 
-Release: `1.2.2`
+v1.2.3 Release: https://github.com/subchen/mknovel/releases/tag/v1.2.3
 
-* Linux-amd64: https://raw.githubusercontent.com/subchen/mknovel/master/bin/mknovel-linux-1.2.2
-* MacOS-amd64: https://raw.githubusercontent.com/subchen/mknovel/master/bin/mknovel-darwin-1.2.2
-* Window-amd64: https://raw.githubusercontent.com/subchen/mknovel/master/bin/mknovel-windows-1.2.2.exe
+- Linux
+
+    ```
+    curl -fSL https://github.com/subchen/mknovel/releases/download/v1.2.3/mknovel-1.2.3-linux-amd64 -o /usr/local/bin/mknovel
+    chmod +x /usr/local/bin/mknovel
+    ```
+
+- macOS
+
+    ```
+    curl -fSL https://github.com/subchen/mknovel/releases/download/v1.2.3/mknovel-1.2.3-darwin-amd64 -o /usr/local/bin/mknovel
+    chmod +x /usr/local/bin/mknovel
+    ```
+
+- Windows
+
+    ```
+    wget https://github.com/subchen/mknovel/releases/download/v1.2.3/mknovel-1.2.3-windows-amd64.exe
+    ```
 
 ## Usage
 

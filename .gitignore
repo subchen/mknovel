@@ -1,4 +1,6 @@
 /.glide/
+/bin/
+/releases/
+/build/
 /*.zip
-!/bin/*.exe
 /mknovel

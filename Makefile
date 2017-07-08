@@ -12,6 +12,9 @@ LDFLAGS := -s -w \
 
 PACKAGES := $(shell go list ./... | grep -v /vendor/)
 
+default:
+	@ echo "no default target for Makefile"
+
 clean:
 	@ rm -rf $(NAME)
 
@@ -22,10 +25,10 @@ fmt:
 	@ go fmt $(PACKAGES)
 
 vet:
-	@go vet $(PACKAGES)
+	@ go vet $(PACKAGES)
 
-test: clean
-	@ go test -v $(PACKAGES) $(args)
+test: clean fmt
+	@ go test -v $(PACKAGES) $(ARGS)
 
 run: clean fmt
 	@ go build -o $(NAME)
@@ -36,14 +39,19 @@ build: \
     build-darwin \
     build-windows
 
-build-linux: clean
-	@ GOOS=linux GOARCH=amd64 \
-	go build -ldflags "$(LDFLAGS)" -o bin/$(NAME)-linux-$(VERSION)
+build-linux: clean fmt
+	@ GOOS=linux GOARCH=amd64 go build -ldflags "$(LDFLAGS)" -o releases/$(NAME)-$(VERSION)-linux-amd64
 
-build-darwin: clean
-	@ GOOS=darwin GOARCH=amd64 \
-	go build -ldflags "$(LDFLAGS)" -o bin/$(NAME)-darwin-$(VERSION)
+build-darwin: clean fmt
+	@ GOOS=darwin GOARCH=amd64 go build -ldflags "$(LDFLAGS)" -o releases/$(NAME)-$(VERSION)-darwin-amd64
 
-build-windows: clean
-	@ GOOS=windows GOARCH=amd64 \
-	go build -ldflags "$(LDFLAGS)" -o bin/$(NAME)-windows-$(VERSION).exe
+build-windows: clean fmt
+	@ GOOS=windows GOARCH=amd64 go build -ldflags "$(LDFLAGS)" -o releases/$(NAME)-$(VERSION)-windows-amd64.exe
+
+md5sum: build
+	@ for f in $(shell ls ./releases); do \
+		cd $(ROOT)/releases; md5sum "$$f" >> $$f.md5; \
+	done
+
+release: md5sum
+
