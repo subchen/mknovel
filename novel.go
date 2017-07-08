@@ -187,8 +187,8 @@ func downloadNovelChapter(novel *Novel, chapter *NovelChapter, nIndex *int32, nS
 			panic(err)
 		}
 
-		atomic.AddInt32(nIndex, 1)
-		fmt.Printf("Downloading %d/%d %04d %v ...\n", *nIndex, len(novel.ChapterList), chapter.Index, chapterUrl.String())
+		idx := atomic.AddInt32(nIndex, 1)
+		fmt.Printf("Downloading %d/%d %04d %v ...\n", idx, len(novel.ChapterList), chapter.Index, chapterUrl.String())
 
 		// make file name
 		file := filepath.Join(novel.Tempdir, fmt.Sprintf("%04d %v.txt", chapter.Index, chapter.Name))
