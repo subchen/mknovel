@@ -172,7 +172,7 @@ func downloadURL(url string, charset string) string {
 		panic(err)
 	}
 
-	if charset != "" {
+	if charset != "" && strings.ToUpper(charset) != "UTF-8" {
 		return decodeString(data, charset)
 	} else {
 		return string(data)
