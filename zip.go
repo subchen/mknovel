@@ -45,7 +45,7 @@ func zipToFile(zipfile string, path string, filenameCharset string) {
 		}
 
 		name := fi.Name()
-		if filenameCharset != "" && strings.ToUpper(charset) != "UTF-8" {
+		if filenameCharset != "" && strings.ToUpper(filenameCharset) != "UTF-8" {
 			name = encodeString([]byte(name), filenameCharset)
 		}
 
