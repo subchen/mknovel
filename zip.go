@@ -4,6 +4,7 @@ import (
 	"archive/zip"
 	"io/ioutil"
 	"os"
+	"strings"
 )
 
 func zipToFile(zipfile string, path string, filenameCharset string) {
@@ -44,7 +45,7 @@ func zipToFile(zipfile string, path string, filenameCharset string) {
 		}
 
 		name := fi.Name()
-		if filenameCharset != "" {
+		if filenameCharset != "" && strings.ToUpper(charset) != "UTF-8" {
 			name = encodeString([]byte(name), filenameCharset)
 		}
 
