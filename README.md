@@ -14,7 +14,7 @@ USAGE:
    mknovel [options] URL
 
 VERSION:
-   1.2.3-38
+   1.2.4-47
 
 AUTHORS:
    Guoqiang Chen <subchen@gmail.com>
@@ -29,26 +29,26 @@ OPTIONS:
 
 ## Downloads
 
-v1.2.3 Release: https://github.com/subchen/mknovel/releases/tag/v1.2.3
+v1.2.4 Release: https://github.com/subchen/mknovel/releases/tag/v1.2.4
 
 - Linux
 
     ```
-    curl -fSL https://github.com/subchen/mknovel/releases/download/v1.2.3/mknovel-1.2.3-linux-amd64 -o /usr/local/bin/mknovel
+    curl -fSL https://github.com/subchen/mknovel/releases/download/v1.2.4/mknovel-1.2.4-linux-amd64 -o /usr/local/bin/mknovel
     chmod +x /usr/local/bin/mknovel
     ```
 
 - macOS
 
     ```
-    curl -fSL https://github.com/subchen/mknovel/releases/download/v1.2.3/mknovel-1.2.3-darwin-amd64 -o /usr/local/bin/mknovel
+    curl -fSL https://github.com/subchen/mknovel/releases/download/v1.2.4/mknovel-1.2.4-darwin-amd64 -o /usr/local/bin/mknovel
     chmod +x /usr/local/bin/mknovel
     ```
 
 - Windows
 
     ```
-    wget https://github.com/subchen/mknovel/releases/download/v1.2.3/mknovel-1.2.3-windows-amd64.exe
+    wget https://github.com/subchen/mknovel/releases/download/v1.2.4/mknovel-1.2.4-windows-amd64.exe
     ```
 
 ## Usage

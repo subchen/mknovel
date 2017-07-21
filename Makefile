@@ -1,6 +1,6 @@
 ROOT    := $(shell pwd)
 NAME    := mknovel
-VERSION := $(shell cat VERSION.txt)
+VERSION := 1.2.4
 
 GOPATH  := $(ROOT)/../../../../
 
@@ -16,7 +16,7 @@ default:
 	@ echo "no default target for Makefile"
 
 clean:
-	@ rm -rf $(NAME)
+	@ rm -rf $(NAME) ./releases ./build
 
 glide-vc:
 	@ glide-vc --only-code --no-tests --no-legal-files
