@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+	"sync"
 	"sync/atomic"
 
 	"github.com/go-yaml/yaml"
@@ -179,7 +180,7 @@ func downloadURL(url string, charset string) string {
 	}
 }
 
-func downloadNovelChapter(novel *Novel, chapter *NovelChapter, nIndex *int32, nShortChapter int) threads.JobFunc {
+func downloadNovelChapter(novel *Novel, chapter *NovelChapter, nIndex *int32, nShortChapter int, fmtMutex *sync.Mutex) threads.JobFunc {
 	return func() interface{} {
 		// make chapter url
 		chapterUrl, err := novel.BookUrl.Parse(chapter.Link)
@@ -188,7 +189,9 @@ func downloadNovelChapter(novel *Novel, chapter *NovelChapter, nIndex *int32, nS
 		}
 
 		idx := atomic.AddInt32(nIndex, 1)
+		fmtMutex.Lock()
 		fmt.Printf("Downloading %d/%d %04d %v ...\n", idx, len(novel.ChapterList), chapter.Index, chapterUrl.String())
+		fmtMutex.Unlock()
 
 		// make file name
 		file := filepath.Join(novel.Tempdir, fmt.Sprintf("%04d %v.txt", chapter.Index, chapter.Name))
@@ -270,11 +273,13 @@ func downloadNovel(bookUrl *url.URL, dir string, nThreads int, nShortChapter int
 	pool := threads.NewPool(nThreads, nThreads*2)
 	pool.Start()
 
+	fmtMutex := &sync.Mutex{}
+
 	// download chapters
 	nIndex := int32(0)
 	fmt.Println()
 	for _, chapter := range novel.ChapterList {
-		pool.Submit(downloadNovelChapter(novel, chapter, &nIndex, nShortChapter))
+		pool.Submit(downloadNovelChapter(novel, chapter, &nIndex, nShortChapter, fmtMutex))
 	}
 
 	pool.Shutdown()
