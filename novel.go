@@ -192,29 +192,32 @@ func downloadNovelChapter(novel *Novel, chapter *NovelChapter, nIndex *int32, nS
 
 		// make file name
 		file := filepath.Join(novel.Tempdir, fmt.Sprintf("%04d %v.txt", chapter.Index, chapter.Name))
-		if fileExist(file) {
-			//continue
+		if !fileExist(file) {
+			// download
+			html := downloadURL(chapterUrl.String(), novel.Config.WebsiteCharset)
+
+			// get content html
+			html = getNovelChapterContent(html, novel.Config.Content)
+
+			// html to text
+			text := "    " + chapter.Name + "\n\n" + htmlAsText(html)
+
+			chapter.Size = len(text)
+
+			if chapter.Size >= nShortChapter {
+				// write file
+				err = ioutil.WriteFile(file, []byte(text), 0644)
+				if err != nil {
+					panic(err)
+				}
+			}
+		} else {
 			chapter.Size = fileSize(file)
-			return nil
-		}
 
-		// download
-		html := downloadURL(chapterUrl.String(), novel.Config.WebsiteCharset)
-
-		// html to text
-		html = getNovelChapterContent(html, novel.Config.Content)
-		chapter.Size = len(html)
-		if len(html) < nShortChapter {
-			//continue
-			return nil
-		}
-
-		text := "    " + chapter.Name + "\n\n" + htmlAsText(html)
-
-		// write file
-		err = ioutil.WriteFile(file, []byte(text), 0644)
-		if err != nil {
-			panic(err)
+			if chapter.Size < nShortChapter {
+				// delete file
+				os.Remove(file)
+			}
 		}
 
 		return nil
@@ -227,7 +230,7 @@ func downloadNovel(bookUrl *url.URL, dir string, nThreads int, nShortChapter int
 			fmt.Println()
 			fmt.Printf("ERROR: %+v\n", err)
 			fmt.Println()
-			fmt.Println("You can retry when network issue recovered.")
+			fmt.Println("You can retry later if hit network issue.")
 			fmt.Println()
 			os.Exit(1)
 		}
