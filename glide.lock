@@ -3,8 +3,6 @@ updated: 2017-09-30T11:43:43.496101899+08:00
 imports:
 - name: github.com/go-yaml/yaml
   version: eb3733d160e74a9c7e442f435eb3bea458e1d19f
-- name: github.com/pborman/uuid
-  version: e790cca94e6cc75c7064b1332e63811d4aae1a53
 - name: github.com/subchen/go-cli
   version: b057e4951c7a17edcca8436bf347326c68f8caf0
 - name: github.com/ungerik/go-dry

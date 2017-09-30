@@ -9,5 +9,4 @@ import:
   - encoding/simplifiedchinese
 - package: github.com/subchen/go-cli
   version: 1.x
-- package: github.com/pborman/uuid
 - package: github.com/ungerik/go-dry
