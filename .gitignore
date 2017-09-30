@@ -2,5 +2,8 @@
 /bin/
 /releases/
 /build/
-/*.zip
 /mknovel
+/.cache/
+/*.zip
+/*.epub
+.DS_Store

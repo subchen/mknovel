@@ -2,9 +2,10 @@ package main
 
 import (
 	"archive/zip"
-	"io/ioutil"
+	"fmt"
+	"github.com/ungerik/go-dry"
 	"os"
-	"strings"
+	"path/filepath"
 )
 
 func zipToFile(zipfile string, path string, filenameCharset string) {
@@ -17,6 +18,10 @@ func zipToFile(zipfile string, path string, filenameCharset string) {
 	w := zip.NewWriter(fw)
 	defer w.Close()
 
+	writeDirToZip(w, path, "", filenameCharset)
+}
+
+func writeDirToZip(w *zip.Writer, path string, root string, filenameCharset string) {
 	dir, err := os.Open(path)
 	if err != nil {
 		panic(nil)
@@ -29,27 +34,25 @@ func zipToFile(zipfile string, path string, filenameCharset string) {
 	}
 
 	for _, fi := range filelist {
+		entryName := fi.Name()
+		if root != "" {
+			entryName = root + "/" + entryName
+		}
+
 		if fi.IsDir() {
+			writeDirToZip(w, filepath.Join(path, fi.Name()), entryName, filenameCharset)
 			continue
 		}
 
-		fr, err := os.Open(dir.Name() + "/" + fi.Name())
-		if err != nil {
-			panic(err)
-		}
-		defer fr.Close()
-
-		data, err := ioutil.ReadAll(fr)
+		data, err := dry.FileGetBytes(filepath.Join(path, fi.Name()))
 		if err != nil {
 			panic(err)
 		}
 
-		name := fi.Name()
-		if filenameCharset != "" && strings.ToUpper(filenameCharset) != "UTF-8" {
-			name = encodeString([]byte(name), filenameCharset)
-		}
+		entryName = string(encodeBytes([]byte(entryName), filenameCharset))
+		fmt.Println(entryName)
 
-		f, err := w.Create(name)
+		f, err := w.Create(entryName)
 		if err != nil {
 			panic(err)
 		}

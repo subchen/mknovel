@@ -1,0 +1,51 @@
+body {
+    margin: 10px;
+    font-size: 1.0em;
+    word-wrap: break-word;
+}
+
+@page {
+    margin-bottom: 5pt;
+    margin-top: 5pt;
+}
+
+ul, li {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+li {
+    border-bottom: 1px solid #D5D5D5;
+}
+
+li.toc {
+    line-height: 3.5em;
+    height: 3.5em;
+    font-size: 0.8em;
+}
+
+h1 {
+    margin: 0.8em 0;
+    font-size: 1.6em;
+    font-weight: bold;
+}
+
+h2 {
+    margin: 0.8em 0;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+p {
+    text-indent: 2em;
+    line-height: 1.5em;
+    margin-top: 0;
+    margin-bottom: 1.5em;
+}
+
+a {
+    color: blue;
+    text-decoration: none;
+    cursor: pointer;
+}

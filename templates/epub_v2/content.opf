@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://www.idpf.org/2007/opf" xmlns:dc="http://purl.org/dc/elements/1.1/" unique-identifier="bookid" version="2.0">
+    <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
+        <dc:identifier id="bookid">{{ .BookId }}</dc:identifier>
+        <dc:language>zh-CN</dc:language>
+        <dc:title>{{ .Name }}</dc:title>
+        <dc:creator>{{ .Author }}</dc:creator>
+        <dc:description>{{ .Description }}</dc:description>
+        <dc:subject>mknovel-电子书</dc:subject>
+        <dc:publisher>{{ .Publisher }}</dc:publisher>
+        <dc:date>{{ .PublishDate }}</dc:date>
+{{- if .CoverImageLink }}
+        <meta name="cover" content="cover-image" />
+{{- end }}
+    </metadata>
+
+    <manifest>
+        <item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml" />
+{{- if .CoverImageLink }}
+        <item id="cover-image" href="images/cover.jpg" media-type="image/jpeg" />
+{{- end }}
+        <item id="toc" href="content/toc.xhtml" media-type="application/xhtml+xml" />
+{{- range .ChapterList }}
+        <item id="{{ .FileId }}" href="content/{{ .FileId }}.xhtml" media-type="application/xhtml+xml" />
+{{- end }}
+    </manifest>
+
+    <spine toc="ncx">
+{{- if .CoverImageLink }}
+        <itemref idref="cover-image" linear="yes" />
+{{- end }}
+        <itemref idref="toc" />
+{{- range .ChapterList }}
+        <itemref idref="{{ .FileId }}" />
+{{- end }}
+    </spine>
+
+    <guide>
+        <reference title="目录" href="content/toc.xhtml" type="toc" />
+    </guide>
+</package>

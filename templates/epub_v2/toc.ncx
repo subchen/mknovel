@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1">
+    <head>
+        <meta name="dtb:uid" content="{{ .BookId }}" />
+        <meta name="dtb:depth" content="2" />
+        <meta name="dtb:totalPageCount" content="0" />
+        <meta name="dtb:maxPageNumber" content="0" />
+    </head>
+    <docTitle>
+        <text>{{ .Name }}</text>
+    </docTitle>
+    <docAuthor>
+        <text>{{ .Author }}</text>
+    </docAuthor>
+    <navMap>
+        <navPoint id="toc" playOrder="0">
+            <navLabel><text>目录</text></navLabel>
+            <content src="content/toc.xhtml"/>
+        </navPoint>
+{{- range .ChapterList }}
+        <navPoint id="{{ .FileId }}" playOrder="{{ .Index }}">
+            <navLabel><text>{{ .Name }}</text></navLabel>
+            <content src="content/{{ .FileId }}.xhtml"/>
+        </navPoint>
+{{- end }}
+    </navMap>
+</ncx>

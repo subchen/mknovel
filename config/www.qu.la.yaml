@@ -1,25 +1,30 @@
 website-charset: UTF-8
-zipfilename-charset: GBK
 
 title:
-    begin: <meta property="og:novel:book_name"
-    end: />
-    regexp: content="(.+)"
-    name-index: 1
+  begin: <meta property="og:novel:book_name"
+  end: />
+  regexp: content="(.+)"
+  name-index: 1
 
 author:
-    begin: <meta property="og:novel:author"
-    end: />
-    regexp: content="(.+)"
-    name-index: 1
+  begin: <meta property="og:novel:author"
+  end: />
+  regexp: content="(.+)"
+  name-index: 1
 
-chapter:
-    begin: <div id="list">
-    end: </div>
-    regexp: <a style="" href="([^>]+)">([^<]+)</a>
-    link-index: 1
-    name-index: 2
+cover-image:
+  begin: <div id="fmimg">
+  end: </div>
+  regexp: src="(\S+)"
+  name-index: 1
 
-content:
-    begin: <div id="content">
-    end: <script>
+chapter-index:
+  begin: <div id="list">
+  end: </div>
+  regexp: <a style="" href="([^>]+)">([^<]+)</a>
+  link-index: 1
+  name-index: 2
+
+chapter-content:
+  begin: <div id="content">
+  end: <script>

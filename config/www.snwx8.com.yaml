@@ -1,25 +1,30 @@
 website-charset: GBK
-zipfilename-charset: GBK
 
 title:
-    begin: <title>
-    end: </title>
-    regexp: (.+)最新章节
-    name-index: 1
+  begin: <title>
+  end: </title>
+  regexp: (.+)最新章节
+  name-index: 1
 
 author:
-    begin: <div class="infotitle">
-    end: </div>
-    regexp: <i>作者：(.+)</i>
-    name-index: 1
+  begin: <div class="infotitle">
+  end: </div>
+  regexp: <i>作者：(.+)</i>
+  name-index: 1
 
-chapter:
-    begin: <div id="list">
-    end: </div>
-    regexp: <a href="([^>]+)" title="([^>]+)">
-    link-index: 1
-    name-index: 2
+cover-image:
+  begin: <div id="fmimg">
+  end: </div>
+  regexp: src="(\S+)"
+  name-index: 1
 
-content:
-    begin: <div id="BookText">
-    end: </div>
+chapter-index:
+  begin: <div id="list">
+  end: </div>
+  regexp: <a href="([^>]+)" title="([^>]+)">
+  link-index: 1
+  name-index: 2
+
+chapter-content:
+  begin: <div id="BookText">
+  end: </div>

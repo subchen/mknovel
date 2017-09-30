@@ -1,7 +1,10 @@
 package main
 
 import (
+	"fmt"
+	"github.com/ungerik/go-dry"
 	"hash/crc32"
+	"html"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -11,9 +14,26 @@ import (
 
 var (
 	RE_HTML_COMMENT = regexp.MustCompile("<!--.*-->")
-	RE_HTML_SPACE   = regexp.MustCompile("&nbsp;")
-	RE_HTML_BR      = regexp.MustCompile("<br ?/?>")
-	RE_HTML_P       = regexp.MustCompile("<p ?/?>")
+
+	HTML_LINE_BREAK = []string{
+		"<p>", "</p>", "<p/>", "<p />",
+		"<br>", "<br/>", "<br />",
+	}
+	//HTML_WHITESPACES = []string{
+	//	"&nbsp;", "�", "",
+	//}
+
+	NEW_LINE        = "\r\n"
+	NEW_LINE_DOUBLE = NEW_LINE + NEW_LINE
+
+	UNUSED_KEYWORDS = []string{
+		"月票", "推荐票", "打赏",
+		"书友", "兄弟姐妹",
+		"微信", "公众号", "公告",
+		"喜欢这部作品", "收藏", "下载链接", "注册", "您的支持",
+		"未完待续", "请假一天", "新的一周",
+		"第一更", "第二更", "第三更",
+	}
 )
 
 func substrBetween(str string, begin string, end string) string {
@@ -32,16 +52,51 @@ func substrBetween(str string, begin string, end string) string {
 	return leftStr[0:jpos]
 }
 
-func htmlAsText(html string) string {
-	text := html
-	text = strings.Replace(text, "</p>", "", -1)
-	text = RE_HTML_COMMENT.ReplaceAllString(text, "")
-	text = RE_HTML_BR.ReplaceAllString(text, "\r\n")
-	text = RE_HTML_P.ReplaceAllString(text, "\r\n\r\n")
+func htmlAsTextLines(htmltext string, trimTrailingAd bool) []string {
+	text := htmltext
 
-	text = strings.TrimSpace(text)
-	text = RE_HTML_SPACE.ReplaceAllString(text, " ")
-	return text
+	for _, tag := range HTML_LINE_BREAK {
+		text = strings.Replace(text, tag, "\n", -1)
+		text = strings.Replace(text, strings.ToUpper(tag), "\n", -1)
+	}
+	//for _, space := range HTML_WHITESPACES {
+	//	text = strings.Replace(text, space, " ", -1)
+	//}
+
+	text = RE_HTML_COMMENT.ReplaceAllString(text, "")
+	text = html.UnescapeString(text)
+
+	var lines []string
+	for _, line := range strings.Split(text, "\n") {
+		line = strings.TrimSpace(line)
+		if len(line) > 0 {
+			lines = append(lines, line)
+		}
+	}
+
+	if trimTrailingAd && len(lines) > 10 {
+		// remove last unused line
+		for i := 0; i < 3; i++ {
+			line := lines[len(lines)-1]
+			if !isUnusedLine(line) {
+				break
+			}
+			// remove it, and continue
+			lines = lines[:len(lines)-1]
+		}
+	}
+
+	return lines
+}
+
+func isUnusedLine(text string) bool {
+	for _, keyword := range UNUSED_KEYWORDS {
+		if strings.Index(text, keyword) >= 0 {
+			fmt.Println("  >> " + text)
+			return true
+		}
+	}
+	return false
 }
 
 func hashCRC(text string) string {
@@ -77,4 +132,17 @@ func fileSize(file string) int {
 		return int(f.Size())
 	}
 	return 0
+}
+
+func panicIfError(err error) {
+	if err != nil {
+		panic(err)
+	}
+}
+
+func fileGetAsString(file string, charset string) string {
+	data, err := dry.FileGetBytes(file)
+	panicIfError(err)
+
+	return string(decodeBytes(data, charset))
 }

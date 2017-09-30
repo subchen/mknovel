@@ -1,6 +1,6 @@
 ROOT    := $(shell pwd)
 NAME    := mknovel
-VERSION := 1.2.4
+VERSION := 2.0.0
 
 GOPATH  := $(ROOT)/../../../../
 
@@ -24,7 +24,7 @@ glide-vc:
 fmt:
 	@ go fmt $(PACKAGES)
 
-vet:
+lint: fmt
 	@ go vet $(PACKAGES)
 
 test: clean fmt

@@ -7,37 +7,44 @@ import (
 	"golang.org/x/text/encoding/simplifiedchinese"
 )
 
-func getEncoding(charset string) encoding.Encoding {
-	name := strings.ToUpper(charset)
-
-	if name == "GBK" || name == "GB2312" {
-		return simplifiedchinese.GBK
-	}
-	if name == "GB18030" {
-		return simplifiedchinese.GB18030
+func decodeBytes(data []byte, charset string) []byte {
+	charset = strings.ToUpper(charset)
+	if charset == "" || charset == "UTF-8" {
+		return data
 	}
 
-	panic("Unsupport charset: " + charset)
-}
+	var encoding encoding.Encoding
+	if charset == "GBK" || charset == "GB2312" || charset == "GB18030" {
+		encoding = simplifiedchinese.GB18030
+	} else {
+		panic("Unsupport charset: " + charset)
+	}
 
-func decodeString(text []byte, charset string) string {
-	decoder := getEncoding(charset).NewDecoder()
-
-	dst := make([]byte, len(text)*2)
-	n, _, err := decoder.Transform(dst, text, true)
+	dst := make([]byte, len(data)*2)
+	n, _, err := encoding.NewDecoder().Transform(dst, data, true)
 	if err != nil {
 		panic(err)
 	}
-	return string(dst[:n])
+	return dst[:n]
 }
 
-func encodeString(text []byte, charset string) string {
-	encoder := getEncoding(charset).NewEncoder()
+func encodeBytes(data []byte, charset string) []byte {
+	charset = strings.ToUpper(charset)
+	if charset == "" || charset == "UTF-8" {
+		return data
+	}
 
-	dst := make([]byte, len(text)*2)
-	n, _, err := encoder.Transform(dst, text, true)
+	var encoding encoding.Encoding
+	if charset == "GBK" || charset == "GB2312" || charset == "GB18030" {
+		encoding = simplifiedchinese.GB18030
+	} else {
+		panic("Unsupport charset: " + charset)
+	}
+
+	dst := make([]byte, len(data)*2)
+	n, _, err := encoding.NewEncoder().Transform(dst, data, true)
 	if err != nil {
 		panic(err)
 	}
-	return string(dst[:n])
+	return dst[:n]
 }
