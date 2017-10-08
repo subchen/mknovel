@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-CN">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>{{ .Name }}</title>
+        <link href="style.css" type="text/css" rel="stylesheet" />
+    </head>
+    <body>
+        <h1>版权信息</h1>
+        <ul class="copyrights">
+            <li>书名： {{ .Name }}</li>
+            <li>作者： {{ .Author }}</li>
+            <li>来源： {{ .BookURL.Host }}</li>
+            <li>制作： {{ .Publisher }}</li>
+        </ul>
+        <p class="copyrights">
+            声明：本书版权属于原作者。本电子书由个人用户基于公开来源内容制作。如需完整阅读本书，请购买正版图书。
+        </p>
+    </body>
+</html>

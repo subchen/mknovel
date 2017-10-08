@@ -23,6 +23,7 @@ type (
 		ChapterList    []*NovelChapter
 
 		BookId      string
+		Subject     string
 		Publisher   string
 		PublishDate string
 	}
@@ -43,6 +44,7 @@ func newNovel(bookUrl *url.URL, outputDirectory string) *Novel {
 		BookURL:     bookUrl,
 		Config:      loadConfigFile(bookUrl.Host + ".yaml"),
 		BookId:      hashCRC(bookUrl.String()),
+		Subject:     "mknovel",
 		Publisher:   "https://github.com/subchen/mknovel",
 		PublishDate: time.Now().String(),
 	}

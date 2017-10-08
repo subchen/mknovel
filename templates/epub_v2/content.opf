@@ -6,7 +6,7 @@
         <dc:title>{{ .Name }}</dc:title>
         <dc:creator>{{ .Author }}</dc:creator>
         <dc:description>{{ .Description }}</dc:description>
-        <dc:subject>mknovel-电子书</dc:subject>
+        <dc:subject>{{ .Subject }}</dc:subject>
         <dc:publisher>{{ .Publisher }}</dc:publisher>
         <dc:date>{{ .PublishDate }}</dc:date>
 {{- if .CoverImageLink }}
@@ -19,23 +19,18 @@
 {{- if .CoverImageLink }}
         <item id="cover-image" href="images/cover.jpg" media-type="image/jpeg" />
 {{- end }}
-        <item id="toc" href="content/toc.xhtml" media-type="application/xhtml+xml" />
+        <item id="css" href="content/style.css" media-type="text/css" />
+        <item id="copyrights" href="content/copyrights.xhtml" media-type="application/xhtml+xml" />
 {{- range .ChapterList }}
         <item id="{{ .FileId }}" href="content/{{ .FileId }}.xhtml" media-type="application/xhtml+xml" />
 {{- end }}
     </manifest>
 
     <spine toc="ncx">
-{{- if .CoverImageLink }}
-        <itemref idref="cover-image" linear="yes" />
-{{- end }}
-        <itemref idref="toc" />
+        <itemref idref="copyrights" />
 {{- range .ChapterList }}
         <itemref idref="{{ .FileId }}" />
 {{- end }}
     </spine>
 
-    <guide>
-        <reference title="目录" href="content/toc.xhtml" type="toc" />
-    </guide>
 </package>

@@ -23,9 +23,8 @@ func packageNovelAsEPUB(novel *Novel, outputDirectory string) {
 	executeTemplate("templates/epub_v2/mimetype", filepath.Join(dir, "mimetype"), nil)
 	executeTemplate("templates/epub_v2/content.opf", filepath.Join(dir, "content.opf"), novel)
 	executeTemplate("templates/epub_v2/toc.ncx", filepath.Join(dir, "toc.ncx"), novel)
-
-	executeTemplate("templates/epub_v2/content/toc.xhtml", filepath.Join(dir, "content/toc.xhtml"), novel)
 	executeTemplate("templates/epub_v2/content/style.css", filepath.Join(dir, "content/style.css"), nil)
+	executeTemplate("templates/epub_v2/content/copyrights.xhtml", filepath.Join(dir, "content/copyrights.xhtml"), novel)
 
 	for _, chapter := range novel.ChapterList {
 		destFile := filepath.Join(dir, "content", chapter.FileId()+".xhtml")
