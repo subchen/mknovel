@@ -22,6 +22,7 @@ type (
 		// for epub
 		ID          string
 		URL         string
+		Source      string
 		Subject     string
 		Publisher   string
 		PublishDate string

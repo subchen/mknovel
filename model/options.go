@@ -2,7 +2,9 @@ package model
 
 type (
 	NovelOptions struct {
-		NovelURL string
+		// input
+		NovelURL      string
+		InputEncoding string
 
 		// manunal set
 		NovelName          string
@@ -16,7 +18,7 @@ type (
 		// output
 		OutputFormat        string
 		OutputDirectory     string
-		TxtEncoding         string
+		OutputEncoding      string
 		ZipFilenameEncoding string
 	}
 )

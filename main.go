@@ -9,6 +9,7 @@ import (
 	"github.com/subchen/mknovel/generator"
 	"github.com/subchen/mknovel/model"
 	"github.com/subchen/mknovel/parser/weblink"
+	"github.com/subchen/mknovel/parser/txtfile"
 )
 
 var (
@@ -24,7 +25,7 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "mknovel"
 	app.Usage = "Download a novel from URL and output txt/zip/epub format"
-	app.UsageText = "[options] URL"
+	app.UsageText = "[options] file/URL"
 	app.Authors = "Guoqiang Chen <subchen@gmail.com>"
 
 	app.Flags = []*cli.Flag{
@@ -40,6 +41,11 @@ func main() {
 			Name:  "novel-cover-image",
 			Usage: "cover image file or url",
 			Value: &opts.NovelCoverImageURL,
+		}, {
+			Name:     "input-encoding",
+			Usage:    "encoding for input txt file",
+			DefValue: "GBK",
+			Value:    &opts.InputEncoding,
 		}, {
 			Name:        "threads",
 			Usage:       "parallel threads",
@@ -64,10 +70,10 @@ func main() {
 			DefValue:    ".",
 			Value:       &opts.OutputDirectory,
 		}, {
-			Name:     "txt-encoding",
+			Name:     "output-encoding",
 			Usage:    "encoding for output txt file",
 			DefValue: "GBK",
-			Value:    &opts.TxtEncoding,
+			Value:    &opts.OutputEncoding,
 		}, {
 			Name:     "zip-filename-encoding",
 			Usage:    "encoding for output file name in zip",
@@ -105,7 +111,7 @@ func main() {
 			weblink.StartDownload(novel, opts.Threads, opts.ShortChapterSize)
 		} else {
 			// import from a local txt file
-			//txtfile.ImportNovel(novel)
+			txtfile.ImportAndParse(novel, opts.InputEncoding)
 		}
 
 		// output novel

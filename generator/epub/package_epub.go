@@ -25,7 +25,9 @@ func PackageNovelAsEPUB(novel *model.Novel, outputDirectory string) {
 
 	// using host as source
 	if webURL, err := url.Parse(novel.URL); err == nil {
-		novel.URL = webURL.Host
+		if webURL.Host != "" {
+			novel.Source = webURL.Host
+		}
 	}
 
 	// generate files

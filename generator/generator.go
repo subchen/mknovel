@@ -23,9 +23,9 @@ func ValidateOutputFormat(format string) {
 func PackageNovel(novel *model.Novel, opts *model.NovelOptions) {
 	switch opts.OutputFormat {
 	case "txt":
-		txt.PackageNovelAsTXT(novel, opts.OutputDirectory, opts.TxtEncoding)
+		txt.PackageNovelAsTXT(novel, opts.OutputDirectory, opts.OutputEncoding)
 	case "zip":
-		zip.PackageNovelAsZIP(novel, opts.OutputDirectory, opts.TxtEncoding, opts.ZipFilenameEncoding)
+		zip.PackageNovelAsZIP(novel, opts.OutputDirectory, opts.OutputEncoding, opts.ZipFilenameEncoding)
 	case "epub":
 		epub.PackageNovelAsEPUB(novel, opts.OutputDirectory)
 	}
