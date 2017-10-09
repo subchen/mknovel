@@ -1,4 +1,4 @@
-package main
+package util
 
 import (
 	"strings"
@@ -7,7 +7,7 @@ import (
 	"golang.org/x/text/encoding/simplifiedchinese"
 )
 
-func decodeBytes(data []byte, charset string) []byte {
+func DecodeBytes(data []byte, charset string) []byte {
 	charset = strings.ToUpper(charset)
 	if charset == "" || charset == "UTF-8" {
 		return data
@@ -28,7 +28,7 @@ func decodeBytes(data []byte, charset string) []byte {
 	return dst[:n]
 }
 
-func encodeBytes(data []byte, charset string) []byte {
+func EncodeBytes(data []byte, charset string) []byte {
 	charset = strings.ToUpper(charset)
 	if charset == "" || charset == "UTF-8" {
 		return data

@@ -1,14 +1,14 @@
-package main
+package util
 
 import (
 	"archive/zip"
-	"fmt"
-	"github.com/ungerik/go-dry"
 	"os"
 	"path/filepath"
+
+	"github.com/ungerik/go-dry"
 )
 
-func zipToFile(zipfile string, path string, filenameCharset string) {
+func ZipToFile(zipfile string, path string, filenameCharset string) {
 	fw, err := os.Create(zipfile)
 	if err != nil {
 		panic(err)
@@ -49,9 +49,7 @@ func writeDirToZip(w *zip.Writer, path string, root string, filenameCharset stri
 			panic(err)
 		}
 
-		entryName = string(encodeBytes([]byte(entryName), filenameCharset))
-		fmt.Println(entryName)
-
+		entryName = string(EncodeBytes([]byte(entryName), filenameCharset))
 		f, err := w.Create(entryName)
 		if err != nil {
 			panic(err)

@@ -2,12 +2,13 @@ package main
 
 import (
 	"fmt"
-	"net/url"
 	"os"
-	"path/filepath"
+	"strings"
 
 	"github.com/subchen/go-cli"
-	"strings"
+	"github.com/subchen/mknovel/generator"
+	"github.com/subchen/mknovel/model"
+	"github.com/subchen/mknovel/parser/weblink"
 )
 
 var (
@@ -17,17 +18,9 @@ var (
 	BuildDate      string
 )
 
-var (
-	nThreads            int
-	nShortChapter       int
-	trimTrailingAd      bool
-	txtEncoding         string
-	zipFilenameEncoding string
-	outputFormat        string
-	outputDirectory     string
-)
-
 func main() {
+	opts := new(model.NovelOptions)
+
 	app := cli.NewApp()
 	app.Name = "mknovel"
 	app.Usage = "Download a novel from URL and output txt/zip/epub format"
@@ -36,92 +29,87 @@ func main() {
 
 	app.Flags = []*cli.Flag{
 		{
+			Name:  "novel-name",
+			Usage: "name of novel",
+			Value: &opts.NovelName,
+		}, {
+			Name:  "novel-author",
+			Usage: "author of novel",
+			Value: &opts.NovelAuthor,
+		}, {
+			Name:  "novel-cover-image",
+			Usage: "cover image file or url",
+			Value: &opts.NovelCoverImageURL,
+		}, {
 			Name:        "threads",
 			Usage:       "parallel threads",
 			Placeholder: "num",
 			DefValue:    "100",
-			Value:       &nThreads,
+			Value:       &opts.Threads,
 		}, {
-			Name:        "short-chapter",
-			Usage:       "ignore chapter if size is short",
+			Name:        "short-chapter-size",
+			Usage:       "skip chapter if size is short",
 			Placeholder: "size",
 			DefValue:    "3000",
-			Value:       &nShortChapter,
-		}, {
-			Name:     "trim-trailing-ad",
-			Usage:    "remove ad in trailing by keywords",
-			DefValue: "false",
-			Value:    &trimTrailingAd,
-		}, {
-			Name:     "txt-encoding",
-			Usage:    "encoding for txt file",
-			DefValue: "GBK",
-			Value:    &txtEncoding,
-		}, {
-			Name:     "zip-filename-encoding",
-			Usage:    "encoding for zip file name",
-			DefValue: "GBK",
-			Value:    &zipFilenameEncoding,
+			Value:       &opts.ShortChapterSize,
 		}, {
 			Name:     "format",
 			Usage:    "output file format (txt, zip, epub)",
 			DefValue: "epub",
-			Value:    &outputFormat,
+			Value:    &opts.OutputFormat,
 		}, {
 			Name:        "d, directory",
 			Usage:       "output directory",
 			Placeholder: "dir",
 			DefValue:    ".",
-			Value:       &outputDirectory,
+			Value:       &opts.OutputDirectory,
+		}, {
+			Name:     "txt-encoding",
+			Usage:    "encoding for output txt file",
+			DefValue: "GBK",
+			Value:    &opts.TxtEncoding,
+		}, {
+			Name:     "zip-filename-encoding",
+			Usage:    "encoding for output file name in zip",
+			DefValue: "GBK",
+			Value:    &opts.ZipFilenameEncoding,
 		},
 	}
 
+	// set compiler version
 	if BuildVersion != "" {
 		app.Version = BuildVersion + "-" + BuildGitRev
-		app.BuildGitCommit = BuildGitCommit
-		app.BuildDate = BuildDate
 	}
+	app.BuildGitCommit = BuildGitCommit
+	app.BuildDate = BuildDate
 
+	// cli action
 	app.Action = func(c *cli.Context) {
 		if c.NArg() == 0 {
 			c.ShowHelp()
 			return
 		}
 
-		// dir to abs
-		outputDirectory, _ = filepath.Abs(outputDirectory)
+		// validate
+		generator.ValidateOutputFormat(opts.OutputFormat)
 
-		var novel *Novel
+		// set novel file or url
+		opts.NovelURL = c.Args()[0]
 
-		// check book url
-		arg := c.Args()[0]
-		if strings.HasPrefix(strings.ToLower(arg), "http") {
-			bookUrl, err := url.Parse(arg)
-			if err != nil || bookUrl.Host == "" {
-				c.ShowError(fmt.Errorf("Novel URL is invalid: %s", bookUrl))
-			}
+		// create novel object
+		novel := model.NewNovel(opts)
 
-			// create novel object
-			novel = newNovel(bookUrl, outputDirectory)
-
-			downloadNovel(novel, nThreads, trimTrailingAd)
-
-			filterNovelShortChapters(novel, nShortChapter)
+		// download or parse
+		if strings.Contains(opts.NovelURL, "://") {
+			// download from url
+			weblink.StartDownload(novel, opts.Threads, opts.ShortChapterSize)
 		} else {
-			// load import a txt file
-			//bookFile := arg
+			// import from a local txt file
+			//txtfile.ImportNovel(novel)
 		}
 
-		switch outputFormat {
-		case "txt":
-			packageNovelAsTXT(novel, outputDirectory, txtEncoding)
-		case "zip":
-			packageNovelAsZIP(novel, outputDirectory, txtEncoding, zipFilenameEncoding)
-		case "epub":
-			packageNovelAsEPUB(novel, outputDirectory)
-		default:
-			c.ShowError(fmt.Errorf("Unsupported format: %s", outputFormat))
-		}
+		// output novel
+		generator.PackageNovel(novel, opts)
 
 		// done
 		fmt.Println()
