@@ -15,26 +15,27 @@ func packageNovelAsEPUB(novel *Novel, outputDirectory string) {
 	dir := filepath.Join(novel.CacheDirectory, "epub")
 	os.RemoveAll(dir)
 	os.MkdirAll(filepath.Join(dir, "META-INF"), 0755)
-	os.MkdirAll(filepath.Join(dir, "images"), 0755)
-	os.MkdirAll(filepath.Join(dir, "content"), 0755)
+	os.MkdirAll(filepath.Join(dir, "OEBPS/images"), 0755)
+	os.MkdirAll(filepath.Join(dir, "OEBPS/css"), 0755)
+	os.MkdirAll(filepath.Join(dir, "OEBPS/data"), 0755)
 
 	// generate files
-	executeTemplate("templates/epub_v2/META-INF/container.xml", filepath.Join(dir, "META-INF/container.xml"), nil)
 	executeTemplate("templates/epub_v2/mimetype", filepath.Join(dir, "mimetype"), nil)
-	executeTemplate("templates/epub_v2/content.opf", filepath.Join(dir, "content.opf"), novel)
-	executeTemplate("templates/epub_v2/toc.ncx", filepath.Join(dir, "toc.ncx"), novel)
-	executeTemplate("templates/epub_v2/content/style.css", filepath.Join(dir, "content/style.css"), nil)
-	executeTemplate("templates/epub_v2/content/copyrights.xhtml", filepath.Join(dir, "content/copyrights.xhtml"), novel)
+	executeTemplate("templates/epub_v2/META-INF/container.xml", filepath.Join(dir, "META-INF/container.xml"), nil)
+	executeTemplate("templates/epub_v2/OEBPS/content.opf", filepath.Join(dir, "OEBPS/content.opf"), novel)
+	executeTemplate("templates/epub_v2/OEBPS/toc.ncx", filepath.Join(dir, "OEBPS/toc.ncx"), novel)
+	executeTemplate("templates/epub_v2/OEBPS/css/style.css", filepath.Join(dir, "OEBPS/css/style.css"), nil)
+	executeTemplate("templates/epub_v2/OEBPS/data/copyrights.xhtml", filepath.Join(dir, "OEBPS/data/copyrights.xhtml"), novel)
 
 	for _, chapter := range novel.ChapterList {
-		destFile := filepath.Join(dir, "content", chapter.FileId()+".xhtml")
-		executeTemplate("templates/epub_v2/content/chapter.xhtml", destFile, chapter)
+		destFile := filepath.Join(dir, "OEBPS/data", chapter.FileId()+".xhtml")
+		executeTemplate("templates/epub_v2/OEBPS/data/chapter.xhtml", destFile, chapter)
 	}
 
 	// copy cover-image
 	if novel.CoverImageLink != "" {
 		coverImageSrc := filepath.Join(novel.CacheDirectory, filepath.Base(novel.CoverImageLink))
-		dry.FileCopy(coverImageSrc, filepath.Join(dir, "images/cover.jpg"))
+		dry.FileCopy(coverImageSrc, filepath.Join(dir, "OEBPS/images/cover.jpg"))
 	}
 
 	// zip novel file

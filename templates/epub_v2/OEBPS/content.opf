@@ -15,14 +15,14 @@
     </metadata>
 
     <manifest>
-        <item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml" />
 {{- if .CoverImageLink }}
         <item id="cover-image" href="images/cover.jpg" media-type="image/jpeg" />
 {{- end }}
-        <item id="css" href="content/style.css" media-type="text/css" />
-        <item id="copyrights" href="content/copyrights.xhtml" media-type="application/xhtml+xml" />
+        <item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml" />
+        <item id="css" href="css/style.css" media-type="text/css" />
+        <item id="copyrights" href="data/copyrights.xhtml" media-type="application/xhtml+xml" />
 {{- range .ChapterList }}
-        <item id="{{ .FileId }}" href="content/{{ .FileId }}.xhtml" media-type="application/xhtml+xml" />
+        <item id="{{ .FileId }}" href="data/{{ .FileId }}.xhtml" media-type="application/xhtml+xml" />
 {{- end }}
     </manifest>
 

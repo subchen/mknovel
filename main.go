@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 
 	"github.com/subchen/go-cli"
+	"strings"
 )
 
 var (
@@ -90,19 +91,26 @@ func main() {
 		// dir to abs
 		outputDirectory, _ = filepath.Abs(outputDirectory)
 
+		var novel *Novel
+
 		// check book url
-		rawUrl := c.Args()[0]
-		bookUrl, err := url.Parse(rawUrl)
-		if err != nil || bookUrl.Host == "" {
-			c.ShowError(fmt.Errorf("Novel URL is invalid: %s", bookUrl))
+		arg := c.Args()[0]
+		if strings.HasPrefix(strings.ToLower(arg), "http") {
+			bookUrl, err := url.Parse(arg)
+			if err != nil || bookUrl.Host == "" {
+				c.ShowError(fmt.Errorf("Novel URL is invalid: %s", bookUrl))
+			}
+
+			// create novel object
+			novel = newNovel(bookUrl, outputDirectory)
+
+			downloadNovel(novel, nThreads, trimTrailingAd)
+
+			filterNovelShortChapters(novel, nShortChapter)
+		} else {
+			// load import a txt file
+			//bookFile := arg
 		}
-
-		// create novel object
-		novel := newNovel(bookUrl, outputDirectory)
-
-		downloadNovel(novel, nThreads, trimTrailingAd)
-
-		filterNovelShortChapters(novel, nShortChapter)
 
 		switch outputFormat {
 		case "txt":

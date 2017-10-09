@@ -15,12 +15,12 @@
     <navMap>
         <navPoint id="toc" playOrder="0">
             <navLabel><text>版权信息</text></navLabel>
-            <content src="content/copyrights.xhtml"/>
+            <content src="data/copyrights.xhtml"/>
         </navPoint>
 {{- range .ChapterList }}
         <navPoint id="{{ .FileId }}" playOrder="{{ .Index }}">
             <navLabel><text>{{ .Name }}</text></navLabel>
-            <content src="content/{{ .FileId }}.xhtml"/>
+            <content src="data/{{ .FileId }}.xhtml"/>
         </navPoint>
 {{- end }}
     </navMap>

@@ -4,14 +4,12 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>{{ .Name }}</title>
-        <link href="style.css" type="text/css" rel="stylesheet" />
+        <link href="../css/style.css" type="text/css" rel="stylesheet" />
     </head>
     <body>
-        <h1>目录</h1>
-        <ul>
-{{ range .ChapterList -}}
-            <li class="toc"><a href="{{ .FileId }}.xhtml">{{ .Name }}</a></li>
-{{ end }}
-        </ul>
+        <h2>{{ .Name }}</h2>
+{{- range .Lines }}
+        <p>{{ . }}</p>
+{{- end }}
     </body>
 </html>
