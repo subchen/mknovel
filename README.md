@@ -125,8 +125,18 @@ mknovel http://www.86696.cc/html/0/846/index.html
     ...
 ```
 
-2. 
+2. Generate an epub novel
 
 ```bash
 mknovel 大主宰.txt --novel-name 大主宰 --novel-author 天蚕土豆 --novel-cover-image http://tu.zxcs8.com/content/uploadfile/201707/f3cc1499602096.jpg
+```
+
+### Kindle *.mobi
+
+If you want to generate a `*.mobi` novel for kindle, you need use `kindlegen` to convert `epub` to `mobi` format.
+
+`kindlegen`: https://www.amazon.com/gp/feature.html?docId=1000765211
+
+```bash
+kindlegen novel.epub -o novel.mobi
 ```
