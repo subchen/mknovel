@@ -10,10 +10,7 @@ import (
 	"github.com/subchen/mknovel/model"
 	"github.com/subchen/mknovel/util"
 	"github.com/ungerik/go-dry"
-)
-
-var (
-	templateCache = make(map[string]*template.Template)
+	"github.com/wushilin/threads"
 )
 
 func PackageNovelAsEPUB(novel *model.Novel, outputDirectory string) {
@@ -42,10 +39,15 @@ func PackageNovelAsEPUB(novel *model.Novel, outputDirectory string) {
 	executeTemplate("template/OEBPS/css/style.css", filepath.Join(dir, "OEBPS/css/style.css"), nil)
 	executeTemplate("template/OEBPS/data/copyrights.xhtml", filepath.Join(dir, "OEBPS/data/copyrights.xhtml"), novel)
 
+	// create chapters using thread-pool
+	nThreads := 100
+	pool := threads.NewPool(nThreads, nThreads*2)
+	pool.Start()
 	for _, chapter := range novel.ChapterList {
-		destFile := filepath.Join(dir, "OEBPS/data", chapter.ID+".xhtml")
-		executeTemplate("template/OEBPS/data/chapter.xhtml", destFile, chapter)
+		pool.Submit(writeChapterFile(chapter, dir))
 	}
+	pool.Shutdown()
+	pool.Wait()
 
 	// copy cover-image
 	if novel.CoverImageURL != "" {
@@ -60,19 +62,18 @@ func PackageNovelAsEPUB(novel *model.Novel, outputDirectory string) {
 	util.ZipToFile(file, dir, "UTF-8")
 }
 
-func executeTemplate(templateFile string, destFile string, context interface{}) {
-	fmt.Printf("Writing: %v ...\n", destFile)
-
-	// cache template obj
-	t, ok := templateCache[templateFile]
-	if !ok {
-		var err error
-		srcFileBytes := MustAsset(templateFile)
-		t, err = template.New("").Parse(string(srcFileBytes))
-		dry.PanicIfErr(err)
-
-		templateCache[templateFile] = t
+func writeChapterFile(chapter *model.NovelChapter, dir string) threads.JobFunc {
+	return func() interface{} {
+		destFile := filepath.Join(dir, "OEBPS/data", chapter.ID+".xhtml")
+		executeTemplate("template/OEBPS/data/chapter.xhtml", destFile, chapter)
+		return nil
 	}
+}
+
+func executeTemplate(templateFile string, destFile string, context interface{}) {
+	srcFileBytes := MustAsset(templateFile)
+	t, err := template.New("").Parse(string(srcFileBytes))
+	dry.PanicIfErr(err)
 
 	dest, err := os.Create(destFile)
 	dry.PanicIfErr(err)
