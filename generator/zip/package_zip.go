@@ -25,10 +25,11 @@ func PackageNovelAsZIP(novel *model.Novel, outputDirectory string, txtEncoding s
 
 	for _, chapter := range novel.ChapterList {
 		txt := chapter.Name + NEW_LINES + strings.Join(chapter.TextLines, NEW_LINES)
-		bytes := util.EncodeBytes([]byte(txt), txtEncoding)
+		data := util.EncodeBytes([]byte(txt), txtEncoding)
 
-		file := filepath.Join(dir, chapter.ID+"-"+chapter.Name+".txt")
-		dry.FileSetBytes(file, bytes)
+		destFile := filepath.Join(dir, chapter.ID+"-"+chapter.Name+".txt")
+		fmt.Printf("Writing: %v ...\n", destFile)
+		dry.FileSetBytes(destFile, data)
 	}
 
 	// zip novel file

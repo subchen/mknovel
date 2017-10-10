@@ -37,7 +37,7 @@ OPTIONS:
 
 ## Downloads
 
-v1.2.4 Release: https://github.com/subchen/mknovel/releases/tag/v1.2.4
+v2.0.0 Release: https://github.com/subchen/mknovel/releases/tag/v1.2.4
 
 - Linux
 
