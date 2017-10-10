@@ -23,10 +23,10 @@ func ValidateOutputFormat(format string) {
 func PackageNovel(novel *model.Novel, opts *model.NovelOptions) {
 	switch opts.OutputFormat {
 	case "txt":
-		txt.PackageNovelAsTXT(novel, opts.OutputDirectory, opts.OutputEncoding)
+		txt.PackageNovelAsTXT(novel, opts.OutputDirectory, opts.OutputEncoding, opts.Debug)
 	case "zip":
-		zip.PackageNovelAsZIP(novel, opts.OutputDirectory, opts.OutputEncoding, opts.ZipFilenameEncoding)
+		zip.PackageNovelAsZIP(novel, opts.OutputDirectory, opts.OutputEncoding, opts.ZipFilenameEncoding, opts.Debug)
 	case "epub":
-		epub.PackageNovelAsEPUB(novel, opts.OutputDirectory)
+		epub.PackageNovelAsEPUB(novel, opts.OutputDirectory, opts.Debug)
 	}
 }

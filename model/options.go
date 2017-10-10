@@ -20,5 +20,8 @@ type (
 		OutputDirectory     string
 		OutputEncoding      string
 		ZipFilenameEncoding string
+
+		// debug
+		Debug bool
 	}
 )

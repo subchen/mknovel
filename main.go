@@ -48,7 +48,7 @@ func main() {
 			Value:    &opts.InputEncoding,
 		}, {
 			Name:        "threads",
-			Usage:       "parallel threads",
+			Usage:       "parallel threads for download",
 			Placeholder: "num",
 			DefValue:    "100",
 			Value:       &opts.Threads,
@@ -79,6 +79,11 @@ func main() {
 			Usage:    "encoding for output file name in zip",
 			DefValue: "GBK",
 			Value:    &opts.ZipFilenameEncoding,
+		}, {
+			Name:     "debug",
+			Usage:    "output more information for debug",
+			DefValue: "false",
+			Value:    &opts.Debug,
 		},
 	}
 
@@ -95,6 +100,17 @@ func main() {
 			c.ShowHelp()
 			return
 		}
+
+		defer func() {
+			if !opts.Debug {
+				if err := recover(); err != nil {
+					fmt.Println()
+					fmt.Printf("ERROR: %+v\n", err)
+					fmt.Println()
+					os.Exit(1)
+				}
+			}
+		}()
 
 		// validate
 		generator.ValidateOutputFormat(opts.OutputFormat)

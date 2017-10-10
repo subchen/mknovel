@@ -8,13 +8,13 @@ A general tool for download novel from website.
 
 ```
 NAME:
-   mknovel - Download a novel from URL, transform HTML to TEXT, pack it
+   mknovel - Download a novel from URL and output txt/zip/epub format
 
 USAGE:
-   mknovel [options] URL
+   mknovel [options] file/URL
 
 VERSION:
-   2.0.0-64
+   2.0.0-57
 
 AUTHORS:
    Guoqiang Chen <subchen@gmail.com>
@@ -24,39 +24,39 @@ OPTIONS:
        --novel-author value            author of novel
        --novel-cover-image value       cover image file or url
        --input-encoding value          encoding for input txt file (default: GBK)
-       --threads num                   parallel threads (default: 100)
+       --threads num                   parallel threads for download (default: 100)
        --short-chapter-size size       skip chapter if size is short (default: 3000)
        --format value                  output file format (txt, zip, epub) (default: epub)
    -d, --directory dir                 output directory (default: .)
        --output-encoding value         encoding for output txt file (default: GBK)
        --zip-filename-encoding value   encoding for output file name in zip (default: GBK)
+       --debug                         output more information for debug (default: false)
        --help                          print this usage
        --version                       print version information
-
 ```
 
 ## Downloads
 
-v2.0.0 Release: https://github.com/subchen/mknovel/releases/tag/v1.2.4
+v2.0.0 Release: https://github.com/subchen/mknovel/releases/tag/v2.0.0
 
 - Linux
 
     ```
-    curl -fSL https://github.com/subchen/mknovel/releases/download/v1.2.4/mknovel-1.2.4-linux-amd64 -o /usr/local/bin/mknovel
+    curl -fSL https://github.com/subchen/mknovel/releases/download/v2.0.0/mknovel-2.0.0-linux-amd64 -o /usr/local/bin/mknovel
     chmod +x /usr/local/bin/mknovel
     ```
 
 - macOS
 
     ```
-    curl -fSL https://github.com/subchen/mknovel/releases/download/v1.2.4/mknovel-1.2.4-darwin-amd64 -o /usr/local/bin/mknovel
+    curl -fSL https://github.com/subchen/mknovel/releases/download/v2.0.0/mknovel-2.0.0-darwin-amd64 -o /usr/local/bin/mknovel
     chmod +x /usr/local/bin/mknovel
     ```
 
 - Windows
 
     ```
-    wget https://github.com/subchen/mknovel/releases/download/v1.2.4/mknovel-1.2.4-windows-amd64.exe
+    wget https://github.com/subchen/mknovel/releases/download/v2.0.0/mknovel-2.0.0-windows-amd64.exe
     ```
 
 ## Usage
