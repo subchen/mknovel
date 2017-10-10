@@ -2,6 +2,7 @@ package epub
 
 import (
 	"fmt"
+	"net/url"
 	"os"
 	"path/filepath"
 	"text/template"
@@ -9,7 +10,10 @@ import (
 	"github.com/subchen/mknovel/model"
 	"github.com/subchen/mknovel/util"
 	"github.com/ungerik/go-dry"
-	"net/url"
+)
+
+var (
+	templateCache = make(map[string]*template.Template)
 )
 
 func PackageNovelAsEPUB(novel *model.Novel, outputDirectory string) {
@@ -57,14 +61,23 @@ func PackageNovelAsEPUB(novel *model.Novel, outputDirectory string) {
 }
 
 func executeTemplate(templateFile string, destFile string, context interface{}) {
-	srcFile := filepath.Join(util.GetCurrentDirectory(), "generator/epub", templateFile)
+	fmt.Printf("Writing: %v ...\n", destFile)
+
+	// cache template obj
+	t, ok := templateCache[templateFile]
+	if !ok {
+		var err error
+		srcFileBytes := MustAsset(templateFile)
+		t, err = template.New("").Parse(string(srcFileBytes))
+		dry.PanicIfErr(err)
+
+		templateCache[templateFile] = t
+	}
 
 	dest, err := os.Create(destFile)
 	dry.PanicIfErr(err)
+	defer dest.Close()
 
-	tmpl, err := template.New("").ParseFiles(srcFile)
-	dry.PanicIfErr(err)
-
-	err = tmpl.ExecuteTemplate(dest, filepath.Base(srcFile), context)
+	err = t.Execute(dest, context)
 	dry.PanicIfErr(err)
 }

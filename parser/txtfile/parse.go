@@ -1,12 +1,13 @@
 package txtfile
 
 import (
-	"github.com/subchen/mknovel/model"
-	"github.com/ungerik/go-dry"
-	"github.com/subchen/mknovel/util"
-	"strings"
 	"fmt"
 	"path/filepath"
+	"strings"
+
+	"github.com/subchen/mknovel/model"
+	"github.com/subchen/mknovel/util"
+	"github.com/ungerik/go-dry"
 )
 
 func ImportAndParse(novel *model.Novel, inputEncoding string) {
@@ -29,6 +30,8 @@ func ImportAndParse(novel *model.Novel, inputEncoding string) {
 		}
 	}
 
+	fmt.Println()
+
 	fileBytes, err := dry.FileGetBytes(novel.URL)
 	dry.PanicIfErr(err)
 
@@ -50,6 +53,10 @@ func addChapter(novel *model.Novel, txtChapter string) {
 		}
 	}
 
+	if len(lines) < 2 {
+		return
+	}
+
 	index := len(novel.ChapterList) + 1
 	chapter := &model.NovelChapter{
 		ID:        fmt.Sprintf("%04d", index),
@@ -57,6 +64,8 @@ func addChapter(novel *model.Novel, txtChapter string) {
 		Name:      strings.TrimSpace(lines[0]),
 		TextLines: lines[1:],
 	}
+
+	fmt.Printf("Found: %s %s\n", chapter.ID, chapter.Name)
 
 	novel.ChapterList = append(novel.ChapterList, chapter)
 }

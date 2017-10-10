@@ -8,8 +8,8 @@ import (
 	"github.com/subchen/go-cli"
 	"github.com/subchen/mknovel/generator"
 	"github.com/subchen/mknovel/model"
-	"github.com/subchen/mknovel/parser/weblink"
 	"github.com/subchen/mknovel/parser/txtfile"
+	"github.com/subchen/mknovel/parser/weblink"
 )
 
 var (

@@ -4,6 +4,7 @@
 /build/
 /mknovel
 /.cache/
+/*.txt
 /*.zip
 /*.epub
 .DS_Store

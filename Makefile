@@ -27,6 +27,9 @@ fmt:
 lint: fmt
 	@ go vet $(PACKAGES)
 
+generate:
+	cd generator/epub && go-bindata -pkg=epub -nometadata -nomemcopy -ignore=.DS_Store -o=template_assets.go template/...
+
 test: clean fmt
 	@ go test -v $(PACKAGES) $(ARGS)
 
@@ -39,13 +42,13 @@ build: \
     build-darwin \
     build-windows
 
-build-linux: clean fmt
+build-linux: clean fmt generate
 	@ GOOS=linux GOARCH=amd64 go build -ldflags "$(LDFLAGS)" -o releases/$(NAME)-$(VERSION)-linux-amd64
 
-build-darwin: clean fmt
+build-darwin: clean fmt generate
 	@ GOOS=darwin GOARCH=amd64 go build -ldflags "$(LDFLAGS)" -o releases/$(NAME)-$(VERSION)-darwin-amd64
 
-build-windows: clean fmt
+build-windows: clean fmt generate
 	@ GOOS=windows GOARCH=amd64 go build -ldflags "$(LDFLAGS)" -o releases/$(NAME)-$(VERSION)-windows-amd64.exe
 
 md5sum: build
