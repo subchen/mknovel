@@ -24,7 +24,7 @@ func main() {
 
 	app := cli.NewApp()
 	app.Name = "mknovel"
-	app.Usage = "Download a novel from URL and output txt/zip/epub format"
+	app.Usage = "Download a novel from URL and output epub/txt format"
 	app.UsageText = "[options] file/URL"
 	app.Authors = "Guoqiang Chen <subchen@gmail.com>"
 
@@ -60,7 +60,7 @@ func main() {
 			Value:       &opts.ShortChapterSize,
 		}, {
 			Name:     "format",
-			Usage:    "output file format (txt, zip, epub)",
+			Usage:    "output file format (epub, txt)",
 			DefValue: "epub",
 			Value:    &opts.OutputFormat,
 		}, {
@@ -74,11 +74,6 @@ func main() {
 			Usage:    "encoding for output txt file",
 			DefValue: "GBK",
 			Value:    &opts.OutputEncoding,
-		}, {
-			Name:     "zip-filename-encoding",
-			Usage:    "encoding for output file name in zip",
-			DefValue: "GBK",
-			Value:    &opts.ZipFilenameEncoding,
 		}, {
 			Name:     "debug",
 			Usage:    "output more information for debug",

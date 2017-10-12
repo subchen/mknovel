@@ -28,7 +28,7 @@ lint: fmt
 	@ go vet $(PACKAGES)
 
 generate:
-	cd generator/epub && go-bindata -pkg=epub -nometadata -nomemcopy -ignore=.DS_Store -o=template_assets.go template/...
+	cd generator/epub && go-bindata -pkg=epub -nometadata -nomemcopy -ignore=.DS_Store -o=assets.go template/...
 
 test: clean fmt
 	@ go test -v $(PACKAGES) $(ARGS)

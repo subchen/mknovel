@@ -1,3 +1,4 @@
+/.idea/
 /.glide/
 /bin/
 /releases/
@@ -8,3 +9,5 @@
 /*.zip
 /*.epub
 .DS_Store
+/run.sh
+/kindlegen

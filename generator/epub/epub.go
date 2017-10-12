@@ -9,7 +9,6 @@ import (
 	"text/template"
 
 	"github.com/subchen/mknovel/model"
-	"github.com/subchen/mknovel/util"
 	"github.com/ungerik/go-dry"
 	"github.com/wushilin/threads"
 )
@@ -61,7 +60,7 @@ func PackageNovelAsEPUB(novel *model.Novel, outputDirectory string, isDebug bool
 	file := filepath.Join(outputDirectory, fmt.Sprintf("%s-%s.epub", novel.Name, novel.Author))
 	fmt.Println()
 	fmt.Printf("Archiving ePub: %v ...\n", file)
-	util.ZipToFile(file, dir, "UTF-8")
+	zipToFile(file, dir)
 }
 
 func writeChapterFile(chapter *model.NovelChapter, dir string, poolMutux *sync.Mutex, isDebug bool) threads.JobFunc {

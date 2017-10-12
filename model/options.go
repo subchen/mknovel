@@ -16,10 +16,9 @@ type (
 		ShortChapterSize int
 
 		// output
-		OutputFormat        string
-		OutputDirectory     string
-		OutputEncoding      string
-		ZipFilenameEncoding string
+		OutputFormat    string
+		OutputDirectory string
+		OutputEncoding  string
 
 		// debug
 		Debug bool

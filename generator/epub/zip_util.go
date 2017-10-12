@@ -1,4 +1,4 @@
-package util
+package epub
 
 import (
 	"archive/zip"
@@ -8,7 +8,7 @@ import (
 	"github.com/ungerik/go-dry"
 )
 
-func ZipToFile(zipfile string, path string, filenameCharset string) {
+func zipToFile(zipfile string, path string) {
 	fw, err := os.Create(zipfile)
 	if err != nil {
 		panic(err)
@@ -18,10 +18,10 @@ func ZipToFile(zipfile string, path string, filenameCharset string) {
 	w := zip.NewWriter(fw)
 	defer w.Close()
 
-	writeDirToZip(w, path, "", filenameCharset)
+	writeDirToZip(w, path, "")
 }
 
-func writeDirToZip(w *zip.Writer, path string, root string, filenameCharset string) {
+func writeDirToZip(w *zip.Writer, path string, root string) {
 	dir, err := os.Open(path)
 	if err != nil {
 		panic(nil)
@@ -40,7 +40,7 @@ func writeDirToZip(w *zip.Writer, path string, root string, filenameCharset stri
 		}
 
 		if fi.IsDir() {
-			writeDirToZip(w, filepath.Join(path, fi.Name()), entryName, filenameCharset)
+			writeDirToZip(w, filepath.Join(path, fi.Name()), entryName)
 			continue
 		}
 
@@ -49,7 +49,6 @@ func writeDirToZip(w *zip.Writer, path string, root string, filenameCharset stri
 			panic(err)
 		}
 
-		entryName = string(EncodeBytes([]byte(entryName), filenameCharset))
 		f, err := w.Create(entryName)
 		if err != nil {
 			panic(err)
