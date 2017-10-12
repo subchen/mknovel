@@ -1,6 +1,9 @@
 package generator
 
 import (
+	"os"
+	"path/filepath"
+
 	"github.com/subchen/mknovel/generator/epub"
 	"github.com/subchen/mknovel/generator/txt"
 	"github.com/subchen/mknovel/model"
@@ -20,10 +23,16 @@ func ValidateOutputFormat(format string) {
 }
 
 func PackageNovel(novel *model.Novel, opts *model.NovelOptions) {
+	outputDirectory, _ := filepath.Abs(opts.OutputDirectory)
+	if !dry.FileExists(outputDirectory) {
+		err := os.MkdirAll(outputDirectory, 0755)
+		dry.PanicIfErr(err)
+	}
+
 	switch opts.OutputFormat {
 	case "epub":
-		epub.PackageNovelAsEPUB(novel, opts.OutputDirectory, opts.Debug)
+		epub.PackageNovelAsEPUB(novel, outputDirectory, opts.Debug)
 	case "txt":
-		txt.PackageNovelAsTXT(novel, opts.OutputDirectory, opts.OutputEncoding, opts.Debug)
+		txt.PackageNovelAsTXT(novel, outputDirectory, opts.OutputEncoding, opts.Debug)
 	}
 }

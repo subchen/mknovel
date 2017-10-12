@@ -44,7 +44,6 @@ type (
 
 func NewNovel(opts *NovelOptions) *Novel {
 	id := dry.StringMD5Hex(opts.NovelURL)
-	outputDirectory, _ := filepath.Abs(opts.OutputDirectory)
 
 	novel := &Novel{
 		ID:          id,
@@ -57,7 +56,7 @@ func NewNovel(opts *NovelOptions) *Novel {
 		Author:        opts.NovelAuthor,
 		CoverImageURL: opts.NovelCoverImageURL,
 
-		CacheDirectory: filepath.Join(outputDirectory, ".cache", id),
+		CacheDirectory: filepath.Join(os.TempDir(), ".mknovel", id),
 	}
 
 	// make cache dir
