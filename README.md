@@ -111,6 +111,10 @@ mknovel http://www.86696.cc/html/0/846/index.html
 1. Prepare a txt file, split chapters with double blank lines. 
 
 ```
+书名：大主宰
+作者：天蚕土豆
+
+
 第一章 北灵院
 　　烈日如炎，灼热的阳光从天空...
 　　在那一片投射着被柳树枝叶切...
@@ -128,7 +132,7 @@ mknovel http://www.86696.cc/html/0/846/index.html
 2. Generate an epub novel
 
 ```bash
-mknovel 大主宰.txt --novel-name 大主宰 --novel-author 天蚕土豆 --novel-cover-image http://tu.zxcs8.com/content/uploadfile/201707/f3cc1499602096.jpg
+mknovel 大主宰.txt --novel-cover-image http://tu.zxcs8.com/content/uploadfile/201707/f3cc1499602096.jpg
 ```
 
 ### Kindle *.mobi

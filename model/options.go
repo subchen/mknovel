@@ -6,6 +6,9 @@ type (
 		NovelURL      string
 		InputEncoding string
 
+		// txt parse
+		AutoChapterGroup bool
+
 		// manunal set
 		NovelName          string
 		NovelAuthor        string

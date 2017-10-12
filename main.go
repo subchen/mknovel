@@ -59,6 +59,11 @@ func main() {
 			DefValue:    "3000",
 			Value:       &opts.ShortChapterSize,
 		}, {
+			Name:     "auto-chapter-group",
+			Usage:    "automatic chapter group for txt",
+			DefValue: "false",
+			Value:    &opts.AutoChapterGroup,
+		}, {
 			Name:     "format",
 			Usage:    "output file format (epub, txt)",
 			DefValue: "epub",
@@ -122,7 +127,7 @@ func main() {
 			weblink.StartDownload(novel, opts.Threads, opts.ShortChapterSize)
 		} else {
 			// import from a local txt file
-			txtfile.ImportAndParse(novel, opts.InputEncoding)
+			txtfile.ImportAndParse(novel, opts.InputEncoding, opts.AutoChapterGroup)
 		}
 
 		// output novel
