@@ -1,38 +1,37 @@
+# mknovel
+
 [![Build Status](https://travis-ci.org/subchen/mknovel.svg?branch=master)](https://travis-ci.org/subchen/mknovel)
 [![License](http://img.shields.io/badge/License-Apache_2-red.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0)
 
-
-# mknovel
-
-A general tool for download novel from website.
+A general tool for download novel from website and generate epub format.
 
 ```
 NAME:
-   mknovel - Download a novel from URL and output txt/zip/epub format
+   mknovel - Download a novel from URL and output epub/txt format
 
 USAGE:
    mknovel [options] file/URL
 
 VERSION:
-   2.0.0-57
+   2.0.0-64
 
 AUTHORS:
    Guoqiang Chen <subchen@gmail.com>
 
 OPTIONS:
-       --novel-name value              name of novel
-       --novel-author value            author of novel
-       --novel-cover-image value       cover image file or url
-       --input-encoding value          encoding for input txt file (default: GBK)
-       --threads num                   parallel threads for download (default: 100)
-       --short-chapter-size size       skip chapter if size is short (default: 3000)
-       --format value                  output file format (txt, zip, epub) (default: epub)
-   -d, --directory dir                 output directory (default: .)
-       --output-encoding value         encoding for output txt file (default: GBK)
-       --zip-filename-encoding value   encoding for output file name in zip (default: GBK)
-       --debug                         output more information for debug (default: false)
-       --help                          print this usage
-       --version                       print version information
+       --novel-name value          name of novel
+       --novel-author value        author of novel
+       --novel-cover-image value   cover image file or url
+       --input-encoding value      encoding for input txt file (default: GBK)
+       --threads num               parallel threads for download (default: 100)
+       --short-chapter-size size   skip chapter if size is short (default: 3000)
+       --auto-chapter-group        automatic chapter group for txt (default: false)
+       --format value              output file format (epub, txt) (default: epub)
+   -d, --directory dir             output directory (default: .)
+       --output-encoding value     encoding for output txt file (default: GBK)
+       --debug                     output more information for debug (default: false)
+       --help                      print this usage
+       --version                   print version information
 ```
 
 ## Downloads
@@ -116,12 +115,12 @@ mknovel http://www.86696.cc/html/0/846/index.html
 
 
 第一章 北灵院
-　　烈日如炎，灼热的阳光从天空...
-　　在那一片投射着被柳树枝叶切...
+    烈日如炎，灼热的阳光从天空...
+    在那一片投射着被柳树枝叶切...
 
 
 第二章 被踢出灵路的少年
-　　苏凌他们望着高台上的那些西...
+    苏凌他们望着高台上的那些西...
     “喂，牧哥，那是西院的红...
 
 
@@ -142,5 +141,5 @@ If you want to generate a `*.mobi` novel for kindle, you need use `kindlegen` to
 `kindlegen`: https://www.amazon.com/gp/feature.html?docId=1000765211
 
 ```bash
-kindlegen novel.epub -o novel.mobi
+kindlegen XXX.epub -o XXX.mobi
 ```

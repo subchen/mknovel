@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/subchen/go-stack"
 	"github.com/subchen/mknovel/model"
@@ -109,7 +110,11 @@ func downloadNovelChapter(novel *model.Novel, chapter *model.NovelChapter, confi
 			chapterBytes, err = dry.FileGetBytes(chapterFile)
 			dry.PanicIfErr(err)
 		} else {
-			chapterBytes, err = dry.FileGetBytes(chapter.URL)
+			for i := 0; i < 10; i++ {
+				if chapterBytes, err = dry.FileGetBytes(chapter.URL, 10*time.Second); err == nil {
+					break
+				}
+			}
 			dry.PanicIfErr(err)
 
 			err = dry.FileSetBytes(chapterFile, chapterBytes)
