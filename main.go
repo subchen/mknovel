@@ -2,11 +2,14 @@ package main
 
 import (
 	"fmt"
-	"net/url"
 	"os"
-	"path/filepath"
+	"strings"
 
 	"github.com/subchen/go-cli"
+	"github.com/subchen/mknovel/generator"
+	"github.com/subchen/mknovel/model"
+	"github.com/subchen/mknovel/parser/txtfile"
+	"github.com/subchen/mknovel/parser/weblink"
 )
 
 var (
@@ -16,63 +19,123 @@ var (
 	BuildDate      string
 )
 
-var (
-	nThreads      int
-	nShortChapter int
-	directory     string
-)
-
 func main() {
+	opts := new(model.NovelOptions)
+
 	app := cli.NewApp()
 	app.Name = "mknovel"
-	app.Usage = "Download a novel from URL, transform HTML to TEXT, pack it"
-	app.UsageText = "[options] URL"
+	app.Usage = "Download a novel from URL and output epub/txt format"
+	app.UsageText = "[options] file/URL"
 	app.Authors = "Guoqiang Chen <subchen@gmail.com>"
 
 	app.Flags = []*cli.Flag{
 		{
+			Name:  "novel-name",
+			Usage: "name of novel",
+			Value: &opts.NovelName,
+		}, {
+			Name:  "novel-author",
+			Usage: "author of novel",
+			Value: &opts.NovelAuthor,
+		}, {
+			Name:  "novel-cover-image",
+			Usage: "cover image file or url",
+			Value: &opts.NovelCoverImageURL,
+		}, {
+			Name:     "input-encoding",
+			Usage:    "encoding for input txt file",
+			DefValue: "GBK",
+			Value:    &opts.InputEncoding,
+		}, {
 			Name:        "threads",
-			Usage:       "parallel threads",
+			Usage:       "parallel threads for download",
 			Placeholder: "num",
 			DefValue:    "100",
-			Value:       &nThreads,
-		},
-		{
-			Name:        "short-chapter",
-			Usage:       "ignore chapter if size is short",
+			Value:       &opts.Threads,
+		}, {
+			Name:        "short-chapter-size",
+			Usage:       "skip chapter if size is short",
 			Placeholder: "size",
 			DefValue:    "3000",
-			Value:       &nShortChapter,
+			Value:       &opts.ShortChapterSize,
+		}, {
+			Name:     "auto-chapter-group",
+			Usage:    "automatic chapter group for txt",
+			DefValue: "false",
+			Value:    &opts.AutoChapterGroup,
+		}, {
+			Name:     "format",
+			Usage:    "output file format (epub, txt)",
+			DefValue: "epub",
+			Value:    &opts.OutputFormat,
 		}, {
 			Name:        "d, directory",
 			Usage:       "output directory",
 			Placeholder: "dir",
 			DefValue:    ".",
-			Value:       &directory,
+			Value:       &opts.OutputDirectory,
+		}, {
+			Name:     "output-encoding",
+			Usage:    "encoding for output txt file",
+			DefValue: "GBK",
+			Value:    &opts.OutputEncoding,
+		}, {
+			Name:     "debug",
+			Usage:    "output more information for debug",
+			DefValue: "false",
+			Value:    &opts.Debug,
 		},
 	}
 
+	// set compiler version
 	if BuildVersion != "" {
 		app.Version = BuildVersion + "-" + BuildGitRev
-		app.BuildGitCommit = BuildGitCommit
-		app.BuildDate = BuildDate
 	}
+	app.BuildGitCommit = BuildGitCommit
+	app.BuildDate = BuildDate
 
+	// cli action
 	app.Action = func(c *cli.Context) {
 		if c.NArg() == 0 {
 			c.ShowHelp()
 			return
 		}
 
-		rawUrl := c.Args()[0]
+		defer func() {
+			if !opts.Debug {
+				if err := recover(); err != nil {
+					fmt.Println()
+					fmt.Printf("ERROR: %+v\n", err)
+					fmt.Println()
+					os.Exit(1)
+				}
+			}
+		}()
 
-		bookUrl, err := url.Parse(rawUrl)
-		if err != nil || bookUrl.Host == "" {
-			c.ShowError(fmt.Errorf("The book url is invalid: %s", bookUrl))
+		// validate
+		generator.ValidateOutputFormat(opts.OutputFormat)
+
+		// set novel file or url
+		opts.NovelURL = c.Args()[0]
+
+		// create novel object
+		novel := model.NewNovel(opts)
+
+		// download or parse
+		if strings.Contains(opts.NovelURL, "://") {
+			// download from url
+			weblink.StartDownload(novel, opts.Threads, opts.ShortChapterSize)
+		} else {
+			// import from a local txt file
+			txtfile.ImportAndParse(novel, opts.InputEncoding, opts.AutoChapterGroup)
 		}
 
-		directory, _ = filepath.Abs(directory)
-		downloadNovel(bookUrl, directory, nThreads, nShortChapter)
+		// output novel
+		generator.PackageNovel(novel, opts)
+
+		// done
+		fmt.Println()
+		fmt.Println("Completed!")
 	}
 
 	app.Run(os.Args)

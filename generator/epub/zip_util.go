@@ -1,13 +1,14 @@
-package main
+package epub
 
 import (
 	"archive/zip"
-	"io/ioutil"
 	"os"
-	"strings"
+	"path/filepath"
+
+	"github.com/ungerik/go-dry"
 )
 
-func zipToFile(zipfile string, path string, filenameCharset string) {
+func zipToFile(zipfile string, path string) {
 	fw, err := os.Create(zipfile)
 	if err != nil {
 		panic(err)
@@ -17,6 +18,10 @@ func zipToFile(zipfile string, path string, filenameCharset string) {
 	w := zip.NewWriter(fw)
 	defer w.Close()
 
+	writeDirToZip(w, path, "")
+}
+
+func writeDirToZip(w *zip.Writer, path string, root string) {
 	dir, err := os.Open(path)
 	if err != nil {
 		panic(nil)
@@ -29,27 +34,22 @@ func zipToFile(zipfile string, path string, filenameCharset string) {
 	}
 
 	for _, fi := range filelist {
+		entryName := fi.Name()
+		if root != "" {
+			entryName = root + "/" + entryName
+		}
+
 		if fi.IsDir() {
+			writeDirToZip(w, filepath.Join(path, fi.Name()), entryName)
 			continue
 		}
 
-		fr, err := os.Open(dir.Name() + "/" + fi.Name())
-		if err != nil {
-			panic(err)
-		}
-		defer fr.Close()
-
-		data, err := ioutil.ReadAll(fr)
+		data, err := dry.FileGetBytes(filepath.Join(path, fi.Name()))
 		if err != nil {
 			panic(err)
 		}
 
-		name := fi.Name()
-		if filenameCharset != "" && strings.ToUpper(filenameCharset) != "UTF-8" {
-			name = encodeString([]byte(name), filenameCharset)
-		}
-
-		f, err := w.Create(name)
+		f, err := w.Create(entryName)
 		if err != nil {
 			panic(err)
 		}

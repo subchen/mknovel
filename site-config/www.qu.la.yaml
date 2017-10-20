@@ -1,0 +1,30 @@
+website-charset: UTF-8
+
+title:
+  begin: <meta property="og:novel:book_name"
+  end: />
+  regexp: content="(.+)"
+  name-index: 1
+
+author:
+  begin: <meta property="og:novel:author"
+  end: />
+  regexp: content="(.+)"
+  name-index: 1
+
+cover-image:
+  begin: <div id="fmimg">
+  end: </div>
+  regexp: src="(\S+)"
+  name-index: 1
+
+chapter-index:
+  begin: <div id="list">
+  end: </div>
+  regexp: <a style="" href="([^>]+)">([^<]+)</a>
+  link-index: 1
+  name-index: 2
+
+chapter-content:
+  begin: <div id="content">
+  end: <script>

@@ -1,6 +1,6 @@
 ROOT    := $(shell pwd)
 NAME    := mknovel
-VERSION := 1.2.4
+VERSION := 2.0.0
 
 GOPATH  := $(ROOT)/../../../../
 
@@ -15,6 +15,10 @@ PACKAGES := $(shell go list ./... | grep -v /vendor/)
 default:
 	@ echo "no default target for Makefile"
 
+pre-install:
+	go get github.com/sgotti/glide-vc/...
+	go get github.com/jteeuwen/go-bindata/...
+
 clean:
 	@ rm -rf $(NAME) ./releases ./build
 
@@ -24,8 +28,11 @@ glide-vc:
 fmt:
 	@ go fmt $(PACKAGES)
 
-vet:
+lint: fmt
 	@ go vet $(PACKAGES)
+
+generate:
+	cd generator/epub && go-bindata -pkg=epub -nometadata -nomemcopy -ignore=.DS_Store -o=assets.go template/...
 
 test: clean fmt
 	@ go test -v $(PACKAGES) $(ARGS)
@@ -39,13 +46,13 @@ build: \
     build-darwin \
     build-windows
 
-build-linux: clean fmt
+build-linux: clean fmt generate
 	@ GOOS=linux GOARCH=amd64 go build -ldflags "$(LDFLAGS)" -o releases/$(NAME)-$(VERSION)-linux-amd64
 
-build-darwin: clean fmt
+build-darwin: clean fmt generate
 	@ GOOS=darwin GOARCH=amd64 go build -ldflags "$(LDFLAGS)" -o releases/$(NAME)-$(VERSION)-darwin-amd64
 
-build-windows: clean fmt
+build-windows: clean fmt generate
 	@ GOOS=windows GOARCH=amd64 go build -ldflags "$(LDFLAGS)" -o releases/$(NAME)-$(VERSION)-windows-amd64.exe
 
 md5sum: build

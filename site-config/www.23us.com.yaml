@@ -1,0 +1,30 @@
+website-charset: GBK
+
+title:
+  begin: <title>
+  end: </title>
+  regexp: (.+)最新章节
+  name-index: 1
+
+author:
+  begin: <meta name="og:novel:author"
+  end: />
+  regexp: content="(.+)"
+  name-index: 1
+
+cover-image:
+  begin: <div id="fmimg">
+  end: </div>
+  regexp: src="(\S+)"
+  name-index: 1
+
+chapter-index:
+  begin: <dd><table
+  end: </table></dd>
+  regexp: <a href="([^>]+)">([^<]+)</a>
+  link-index: 1
+  name-index: 2
+
+chapter-content:
+  begin: <dd id="contents">
+  end: </dd>
