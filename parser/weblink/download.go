@@ -10,7 +10,6 @@ import (
 
 	"github.com/subchen/go-stack"
 	"github.com/subchen/mknovel/model"
-	"github.com/subchen/mknovel/util"
 	"github.com/ungerik/go-dry"
 	"github.com/wushilin/threads"
 )
@@ -126,7 +125,7 @@ func downloadNovelChapter(novel *model.Novel, chapter *model.NovelChapter, confi
 		html = getNovelChapterContent(html, config.ChapterContent)
 
 		// convert to plain txt lines
-		chapter.TextLines = util.HtmlAsTextLines(html)
+		chapter.TextLines = htmlAsTextLines(html)
 		chapter.Size = len(strings.Join(chapter.TextLines, "\n"))
 
 		return nil

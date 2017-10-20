@@ -1,4 +1,4 @@
-package util
+package weblink
 
 import (
 	"html"
@@ -15,7 +15,7 @@ var (
 	}
 )
 
-func HtmlAsTextLines(htmltext string) []string {
+func htmlAsTextLines(htmltext string) []string {
 	text := htmltext
 
 	for _, tag := range HTML_LINE_BREAK {
