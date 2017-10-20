@@ -1,16 +1,18 @@
-hash: df18bac04f27334dcc9f2fe3f8527bc9eca0efe2826efd2e84d24c17fe9e3eca
-updated: 2017-10-10T12:19:45.957651403+08:00
+hash: c95dfa5cdfdb98bb2e11c60e70507dbfee7820bbab73b94fe85cf4363bdd14f8
+updated: 2017-10-20T06:28:43.504219812Z
 imports:
 - name: github.com/go-yaml/yaml
   version: eb3733d160e74a9c7e442f435eb3bea458e1d19f
 - name: github.com/subchen/go-cli
   version: b057e4951c7a17edcca8436bf347326c68f8caf0
+- name: github.com/subchen/go-stack
+  version: 55f1dbdce4a1737e6e21bdcda0ce5a874c6d1fc9
 - name: github.com/ungerik/go-dry
   version: 73dd38d72c6e74cdce93d0ca16de6da9d2e0b6e1
 - name: github.com/wushilin/threads
   version: d24acb41d4569064630b4157284eec6313aed34a
 - name: golang.org/x/text
-  version: 825fc78a2fd6fa0a5447e300189e3219e05e1f25
+  version: 470f45bf29f4147d6fbd7dfd0a02a848e49f5bf4
   subpackages:
   - encoding
   - encoding/internal

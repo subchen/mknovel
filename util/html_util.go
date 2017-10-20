@@ -2,8 +2,6 @@ package util
 
 import (
 	"html"
-	"os"
-	"path/filepath"
 	"regexp"
 	"strings"
 )
@@ -37,20 +35,4 @@ func HtmlAsTextLines(htmltext string) []string {
 	}
 
 	return lines
-}
-
-func GetExecutorDirectory() string {
-	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
-	if err != nil {
-		panic(err)
-	}
-	return dir
-}
-
-func GetCurrentDirectory() string {
-	dir := os.Getenv("PWD")
-	if dir == "" {
-		dir = "."
-	}
-	return dir
 }

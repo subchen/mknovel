@@ -7,6 +7,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/subchen/go-stack"
 	"github.com/subchen/mknovel/model"
 	"github.com/subchen/mknovel/util"
 	"github.com/ungerik/go-dry"
@@ -25,7 +26,7 @@ func StartDownload(novel *model.Novel, nThreads int, nShortChapterSize int) {
 	fmt.Printf("Downloading %s ...\n", novel.URL)
 	htmlBytes, err := dry.FileGetBytes(novel.URL)
 	dry.PanicIfErr(err)
-	html := string(util.DecodeBytes(htmlBytes, config.WebsiteCharset))
+	html := string(gstack.CharsetDecodeBytes(htmlBytes, config.WebsiteCharset))
 
 	// parse name
 	if novel.Name == "" {
@@ -116,7 +117,7 @@ func downloadNovelChapter(novel *model.Novel, chapter *model.NovelChapter, confi
 		}
 
 		// parse content
-		html := string(util.DecodeBytes(chapterBytes, config.WebsiteCharset))
+		html := string(gstack.CharsetDecodeBytes(chapterBytes, config.WebsiteCharset))
 		html = getNovelChapterContent(html, config.ChapterContent)
 
 		// convert to plain txt lines

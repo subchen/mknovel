@@ -3,10 +3,8 @@ import:
 - package: github.com/go-yaml/yaml
   version: v2
 - package: github.com/wushilin/threads
-- package: golang.org/x/text
-  subpackages:
-  - encoding
-  - encoding/simplifiedchinese
 - package: github.com/subchen/go-cli
   version: 1.x
 - package: github.com/ungerik/go-dry
+- package: github.com/subchen/go-stack
+  version: 1.x

@@ -15,6 +15,10 @@ PACKAGES := $(shell go list ./... | grep -v /vendor/)
 default:
 	@ echo "no default target for Makefile"
 
+pre-install:
+	go get github.com/sgotti/glide-vc/...
+	go get github.com/jteeuwen/go-bindata/...
+
 clean:
 	@ rm -rf $(NAME) ./releases ./build
 

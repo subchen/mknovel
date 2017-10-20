@@ -6,8 +6,8 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/subchen/go-stack"
 	"github.com/subchen/mknovel/model"
-	"github.com/subchen/mknovel/util"
 	"github.com/ungerik/go-dry"
 )
 
@@ -39,7 +39,7 @@ func PackageNovelAsTXT(novel *model.Novel, outputDirectory string, outputEncodin
 
 func writeln(w io.Writer, s string, outputEncoding string) {
 	if s != "" {
-		data := util.EncodeBytes([]byte(s), outputEncoding)
+		data := gstack.CharsetEncodeBytes([]byte(s), outputEncoding)
 		w.Write(data)
 	}
 	w.Write(SINGLE_NEW_LINE_BYTES)

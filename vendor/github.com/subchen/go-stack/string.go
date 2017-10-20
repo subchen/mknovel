@@ -1,10 +1,10 @@
-package util
+package gstack
 
 import (
 	"strings"
 )
 
-func SubstrBefore(str string, find string) string {
+func StringBefore(str string, find string) string {
 	if len(find) == 0 {
 		return ""
 	}
@@ -15,7 +15,7 @@ func SubstrBefore(str string, find string) string {
 	return str[:pos]
 }
 
-func SubstrAfter(str string, find string) string {
+func StringAfter(str string, find string) string {
 	if len(find) == 0 {
 		return str
 	}
@@ -26,7 +26,7 @@ func SubstrAfter(str string, find string) string {
 	return str[pos+len(find):]
 }
 
-func SubstrBeforeLast(str string, find string) string {
+func StringBeforeLast(str string, find string) string {
 	if len(find) == 0 {
 		return str
 	}
@@ -37,7 +37,7 @@ func SubstrBeforeLast(str string, find string) string {
 	return str[:pos]
 }
 
-func SubstrAfterLast(str string, find string) string {
+func StringAfterLast(str string, find string) string {
 	if len(find) == 0 {
 		return ""
 	}
@@ -48,7 +48,7 @@ func SubstrAfterLast(str string, find string) string {
 	return str[pos+len(find):]
 }
 
-func SubstrBetween(str string, begin string, end string) string {
+func StringBetween(str string, begin string, end string) string {
 	ipos := strings.Index(str, begin)
 	if ipos < 0 {
 		return ""

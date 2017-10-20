@@ -1,4 +1,4 @@
-package util
+package gstack
 
 import (
 	"strings"
@@ -7,7 +7,7 @@ import (
 	"golang.org/x/text/encoding/simplifiedchinese"
 )
 
-func DecodeBytes(data []byte, charset string) []byte {
+func CharsetDecodeBytes(data []byte, charset string) []byte {
 	charset = strings.ToUpper(charset)
 	if charset == "" || charset == "UTF-8" {
 		return data
@@ -17,7 +17,7 @@ func DecodeBytes(data []byte, charset string) []byte {
 	if charset == "GBK" || charset == "GB2312" || charset == "GB18030" {
 		encoding = simplifiedchinese.GB18030
 	} else {
-		panic("Unsupport charset: " + charset)
+		panic("Unsupported charset: " + charset)
 	}
 
 	dst := make([]byte, len(data)*2)
@@ -28,7 +28,7 @@ func DecodeBytes(data []byte, charset string) []byte {
 	return dst[:n]
 }
 
-func EncodeBytes(data []byte, charset string) []byte {
+func CharsetEncodeBytes(data []byte, charset string) []byte {
 	charset = strings.ToUpper(charset)
 	if charset == "" || charset == "UTF-8" {
 		return data
@@ -38,7 +38,7 @@ func EncodeBytes(data []byte, charset string) []byte {
 	if charset == "GBK" || charset == "GB2312" || charset == "GB18030" {
 		encoding = simplifiedchinese.GB18030
 	} else {
-		panic("Unsupport charset: " + charset)
+		panic("Unsupported charset: " + charset)
 	}
 
 	dst := make([]byte, len(data)*2)
@@ -47,4 +47,12 @@ func EncodeBytes(data []byte, charset string) []byte {
 		panic(err)
 	}
 	return dst[:n]
+}
+
+func CharsetDecodeString(data string, charset string) string {
+	return string(CharsetDecodeBytes([]byte(data), charset))
+}
+
+func CharsetEncodeString(data string, charset string) string {
+	return string(CharsetEncodeBytes([]byte(data), charset))
 }
