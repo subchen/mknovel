@@ -5,7 +5,6 @@ go:
 
 before_script:
   - go get -u github.com/jteeuwen/go-bindata/...
-  - cp -f $GOPATH/bin/go-bindata /usr/local/bin/
 
 script: make release
 
