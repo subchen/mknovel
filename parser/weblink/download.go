@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/subchen/go-stack"
+	"github.com/subchen/go-stack/encoding/runes"
 	"github.com/subchen/mknovel/model"
 	"github.com/ungerik/go-dry"
 	"github.com/wushilin/threads"
@@ -26,7 +26,7 @@ func StartDownload(novel *model.Novel, nThreads int, nShortChapterSize int) {
 	fmt.Printf("Downloading %s ...\n", novel.URL)
 	htmlBytes, err := dry.FileGetBytes(novel.URL)
 	dry.PanicIfErr(err)
-	html := string(gstack.CharsetDecodeBytes(htmlBytes, config.WebsiteCharset))
+	html := string(runes.DecodeBytes(htmlBytes, config.WebsiteCharset))
 
 	// parse name
 	if novel.Name == "" {
@@ -121,7 +121,7 @@ func downloadNovelChapter(novel *model.Novel, chapter *model.NovelChapter, confi
 		}
 
 		// parse content
-		html := string(gstack.CharsetDecodeBytes(chapterBytes, config.WebsiteCharset))
+		html := string(runes.DecodeBytes(chapterBytes, config.WebsiteCharset))
 		html = getNovelChapterContent(html, config.ChapterContent)
 
 		// convert to plain txt lines

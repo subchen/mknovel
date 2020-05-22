@@ -14,6 +14,7 @@ import (
 
 var (
 	BuildVersion   string
+	BuildGitBranch string
 	BuildGitRev    string
 	BuildGitCommit string
 	BuildDate      string
@@ -88,11 +89,12 @@ func main() {
 	}
 
 	// set compiler version
-	if BuildVersion != "" {
-		app.Version = BuildVersion + "-" + BuildGitRev
+	app.BuildInfo = &cli.BuildInfo{
+		GitBranch:   BuildGitBranch,
+		GitCommit:   BuildGitCommit,
+		GitRevCount: BuildGitRev,
+		Timestamp:   BuildDate,
 	}
-	app.BuildGitCommit = BuildGitCommit
-	app.BuildDate = BuildDate
 
 	// cli action
 	app.Action = func(c *cli.Context) {

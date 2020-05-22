@@ -8,7 +8,8 @@ import (
 	"strings"
 
 	"github.com/go-yaml/yaml"
-	"github.com/subchen/go-stack"
+	"github.com/subchen/go-stack/process"
+	"github.com/subchen/go-stack/ss"
 	"github.com/subchen/mknovel/model"
 	"github.com/ungerik/go-dry"
 )
@@ -60,10 +61,10 @@ type (
 
 func loadConfig(file string) *SiteConfig {
 	dirs := []string{
-		gstack.ProcessGetPWD(),
-		filepath.Join(gstack.ProcessGetPWD(), "site-config"),
-		gstack.ProcessGetBinDir(),
-		filepath.Join(gstack.ProcessGetBinDir(), "site-config"),
+		process.GetCwd(),
+		filepath.Join(process.GetCwd(), "site-config"),
+		process.Dir(),
+		filepath.Join(process.Dir(), "site-config"),
 		"/etc/mknovel",
 	}
 
@@ -85,7 +86,7 @@ func loadConfig(file string) *SiteConfig {
 
 func getNovelTitle(html string, config *SiteTitleConfig) string {
 	if config.Begin != "" && config.End != "" {
-		html = gstack.StringBetween(html, config.Begin, config.End)
+		html = ss.StringBetween(html, config.Begin, config.End)
 	}
 
 	re := regexp.MustCompile(config.Regexp)
@@ -96,7 +97,7 @@ func getNovelTitle(html string, config *SiteTitleConfig) string {
 
 func getNovelAuthor(html string, config *SiteAuthorConfig) string {
 	if config.Begin != "" && config.End != "" {
-		html = gstack.StringBetween(html, config.Begin, config.End)
+		html = ss.StringBetween(html, config.Begin, config.End)
 	}
 
 	re := regexp.MustCompile(config.Regexp)
@@ -107,7 +108,7 @@ func getNovelAuthor(html string, config *SiteAuthorConfig) string {
 
 func getNovelCoverImage(html string, config *SiteCoverImageConfig) string {
 	if config.Begin != "" && config.End != "" {
-		html = gstack.StringBetween(html, config.Begin, config.End)
+		html = ss.StringBetween(html, config.Begin, config.End)
 	}
 
 	re := regexp.MustCompile(config.Regexp)
@@ -118,7 +119,7 @@ func getNovelCoverImage(html string, config *SiteCoverImageConfig) string {
 
 func getNovelChapterList(html string, config *SiteChapterIndexConfig) []*model.NovelChapter {
 	if config.Begin != "" && config.End != "" {
-		html = gstack.StringBetween(html, config.Begin, config.End)
+		html = ss.StringBetween(html, config.Begin, config.End)
 	}
 
 	re := regexp.MustCompile(config.Regexp)
@@ -138,6 +139,6 @@ func getNovelChapterList(html string, config *SiteChapterIndexConfig) []*model.N
 }
 
 func getNovelChapterContent(html string, config *SiteChapterContentConfig) string {
-	html = gstack.StringBetween(html, config.Begin, config.End)
+	html = ss.StringBetween(html, config.Begin, config.End)
 	return html
 }

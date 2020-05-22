@@ -1,0 +1,15 @@
+github.com/go-yaml/yaml v2.1.0+incompatible h1:RYi2hDdss1u4YE7GwixGzWwVo47T8UQwnTLB6vQiq+o=
+github.com/go-yaml/yaml v2.1.0+incompatible/go.mod h1:w2MrLa16VYP0jy6N7M5kHaCkaLENm+P+Tv+MfurjSw0=
+github.com/subchen/go-cli v2.0.3+incompatible h1:tYs2M2yt24nbNaGMeeSiTkajAen0vALVualScLJ5Qdc=
+github.com/subchen/go-cli v2.0.3+incompatible/go.mod h1:XgWUJcEvZzeSp62+RgNZe61w19G/xIBVuQY9u2qpXmk=
+github.com/subchen/go-stack v1.0.1 h1:RxjXbPrLJbbhnqeW+2HlrfYgJubvhJP0ZheZXBkUkZg=
+github.com/subchen/go-stack v1.0.1/go.mod h1:3cT/CaPsREcrfdDISX4scDVSguZsBDKPuPBYpwiCOLk=
+github.com/ungerik/go-dry v0.0.0-20180411133923-654ae31114c8 h1:p6JzR5AMj5LyCEovRh5MOxmyuuwOEtfcVDwKqsBn41I=
+github.com/ungerik/go-dry v0.0.0-20180411133923-654ae31114c8/go.mod h1:+LeLocciSarKa1pxOY7gmBQ7dSk5nB1w1f3nvvLw0j0=
+github.com/wushilin/threads v0.0.0-20160628054207-d24acb41d456 h1:S1AgR1IH86vvcQsGJpEGWQAmdi1WRwEU5ZWCJIM6yvU=
+github.com/wushilin/threads v0.0.0-20160628054207-d24acb41d456/go.mod h1:o6m0BwC2vXWqsH9g+WkUCXn9qYmDaMlsbuPrwZcRgQ8=
+golang.org/x/text v0.3.2 h1:tW2bmiBqwgJj/UpqtC8EpXEZVYOwU0yG4iWbprSVAcs=
+golang.org/x/text v0.3.2/go.mod h1:bEr9sfX3Q8Zfm5fL9x+3itogRgK3+ptLWKqgva+5dAk=
+golang.org/x/tools v0.0.0-20180917221912-90fa682c2a6e/go.mod h1:n7NCudcB/nEzxVGmLbDWY5pfWTLqBcC2KZ6jyYvM4mQ=
+gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
+gopkg.in/yaml.v2 v2.3.0/go.mod h1:hI93XBmqTisBFMUTm0b8Fm+jr3Dg1NNxqwp+5A1VGuI=

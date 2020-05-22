@@ -2,40 +2,34 @@ ROOT    := $(shell pwd)
 NAME    := mknovel
 VERSION := 2.0.0
 
-GOPATH  := $(ROOT)/../../../../
-
 LDFLAGS := -s -w \
            -X 'main.BuildVersion=$(VERSION)' \
+		   -X 'main.BuildGitBranch=$(shell git describe --all)' \
            -X 'main.BuildGitRev=$(shell git rev-list HEAD --count)' \
            -X 'main.BuildGitCommit=$(shell git describe --abbrev=0 --always)' \
            -X 'main.BuildDate=$(shell date -u -R)'
-
-PACKAGES := $(shell go list ./... | grep -v /vendor/)
 
 default:
 	@ echo "no default target for Makefile"
 
 pre-install:
-	go get github.com/sgotti/glide-vc/...
-	go get github.com/jteeuwen/go-bindata/...
+	go env -w GOPROXY=https://goproxy.cn,direct
+	go get github.com/go-bindata/go-bindata/... && cp ~/go/bin/go-bindata /usr/local/bin/
 
 clean:
 	@ rm -rf $(NAME) ./releases ./build
 
-glide-vc:
-	@ glide-vc --only-code --no-tests --no-legal-files
-
 fmt:
-	@ go fmt $(PACKAGES)
+	@ go fmt ./...
 
 lint: fmt
-	@ go vet $(PACKAGES)
+	@ go vet ./...
 
 generate:
 	cd generator/epub && go-bindata -pkg=epub -nometadata -nomemcopy -ignore=.DS_Store -o=assets.go template/...
 
 test: clean fmt
-	@ go test -v $(PACKAGES) $(ARGS)
+	@ go test -v ./... $(args)
 
 run: clean fmt
 	@ go build -o $(NAME)
@@ -47,7 +41,7 @@ build: \
     build-windows
 
 build-linux: clean fmt generate
-	@ GOOS=linux GOARCH=amd64 go build -ldflags "$(LDFLAGS)" -o releases/$(NAME)-$(VERSION)-linux-amd64
+	@ CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -ldflags "$(LDFLAGS)" -o releases/$(NAME)-$(VERSION)-linux-amd64
 
 build-darwin: clean fmt generate
 	@ GOOS=darwin GOARCH=amd64 go build -ldflags "$(LDFLAGS)" -o releases/$(NAME)-$(VERSION)-darwin-amd64

@@ -6,7 +6,8 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/subchen/go-stack"
+	"github.com/subchen/go-stack/encoding/runes"
+	"github.com/subchen/go-stack/ss"
 	"github.com/subchen/mknovel/model"
 	"github.com/ungerik/go-dry"
 )
@@ -19,7 +20,7 @@ func ImportAndParse(novel *model.Novel, inputEncoding string, autoChapterGroup b
 	fileBytes, err := dry.FileGetBytes(novel.URL)
 	dry.PanicIfErr(err)
 
-	txt := string(gstack.CharsetDecodeBytes(fileBytes, inputEncoding))
+	txt := string(runes.DecodeBytes(fileBytes, inputEncoding))
 	txt = strings.Replace(txt, "\r", "", -1)
 	txt = REGEXP_WHITESPACES_LINE.ReplaceAllString(txt, "\n")
 
@@ -32,8 +33,8 @@ func ImportAndParse(novel *model.Novel, inputEncoding string, autoChapterGroup b
 	if len(headers) >= 2 {
 		HEADER_KEYWORD := "作者"
 		if strings.Contains(headers[0], HEADER_KEYWORD) {
-			name := gstack.StringBefore(headers[0], HEADER_KEYWORD)
-			author := gstack.StringAfter(headers[0], HEADER_KEYWORD)
+			name := ss.StringBefore(headers[0], HEADER_KEYWORD)
+			author := ss.StringAfter(headers[0], HEADER_KEYWORD)
 			setNovelNameAndAuthor(novel, name, author)
 			skipHeaderLines = 1
 		} else if strings.Contains(headers[1], HEADER_KEYWORD) {
